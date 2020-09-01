@@ -1,11 +1,6 @@
 <template>
   <div id="app">
-    <div class="title">
-      敬请期待...
-    </div>
-    <div class="note">
-      presented by Zhengjingqun
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
