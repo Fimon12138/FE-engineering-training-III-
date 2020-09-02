@@ -17,7 +17,7 @@
           <!-- right: two buttons & icon -->
           <div class="md-toolbar-section-end">
             <span class="small-button-text" style="margin-right: 30px">我的票</span>
-            <div style="display: flex">
+            <div style="display: flex" @click="login">
               <span class="small-button-text" style="margin-right: 5px; line-height: 30px">登录</span>
               <md-icon :md-src="require('../assets/svg/account_circle.svg')" style="width: 30px; height: 30px"></md-icon>
             </div>
@@ -33,6 +33,11 @@ export default {
   data() {
     return {
       searchPattern: ''
+    }
+  },
+  methods: {
+    login() {
+      this.$router.push('/login');
     }
   }
 }
