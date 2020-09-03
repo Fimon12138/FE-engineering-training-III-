@@ -30,14 +30,14 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       searchPattern: ''
     }
   },
   methods: {
-    login() {
-      this.$router.push('/login');
+    login () {
+      this.$router.push('/login')
     }
   }
 }
@@ -59,5 +59,9 @@ export default {
 .small-button-text {
   font-size: 15px;
   font-weight: bold;
+  cursor: pointer;
+}
+.small-button-text:hover {
+  color: #1bb1ba;
 }
 </style>
