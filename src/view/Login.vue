@@ -5,39 +5,100 @@
       <span class="text">会员登录</span>
     </div>
     <div class="main">
-      <md-card  class="card">
-        <div class="form-area">
-          <md-field md-clearable>
-            <md-icon :md-src="require('../assets/svg/account_circle_grey.svg')"></md-icon>
-            <label>用户名</label>
-            <md-input v-model="formData.name"></md-input>
-          </md-field>
-          <md-field>
-            <md-icon :md-src="require('../assets/svg/lock.svg')"></md-icon>
-            <label>密码</label>
-            <md-input v-model="formData.password" type="password"></md-input>
-          </md-field>
+      <el-card>
+        <el-form ref="formRef" :model="formData" label-position="top"
+          :rules="rules">
+          <el-form-item v-for="item in formSchema" :key="item.label"
+            :prop="item.data.field">
+            <FormItemExtend useIcon :iconUrl="item.iconUrl"
+              :label="item.label" :renderData="{ schema: item.data, form: formData }"
+              disableNote @input="modifyForm"
+            ></FormItemExtend>
+          </el-form-item>
+        </el-form>
+        <el-button type="success" class="login-button" @click="login">登录</el-button>
+        <div class="signup">
+          还没有账号？ <a href="/#/signup">注册</a>
         </div>
-        <md-button class="signin-button">登录</md-button>
-        <br>
-        <span>还不是会员？ <a href="/">注册</a></span>
-      </md-card>
+      </el-card>
     </div>
     <div class="footer">
       <span>或者，现在作为商家入驻票客</span>
-      <md-button class="md-raised md-primary">跳转至商家版</md-button>
+      <el-button type="primary">跳转至商家版</el-button>
     </div>
   </div>
 </template>
 
 <script>
+import FormItemExtend from '../components/FormItemExtend'
+import accountSvg from '../assets/svg/account_circle_grey.svg'
+import lockSvg from '../assets/svg/lock.svg'
+
 export default {
   data () {
     return {
       formData: {
         name: '',
         password: ''
+      },
+      formSchema: [
+        {
+          iconUrl: accountSvg,
+          label: '用户名',
+          data: {
+            field: 'name',
+            type: 'input'
+          }
+        },
+        {
+          iconUrl: lockSvg,
+          label: '密码',
+          data: {
+            field: 'password',
+            type: 'input',
+            attrs: {
+              'show-password': true
+            }
+          }
+        }
+      ],
+      rules: {
+        name: [
+          {
+            validator: (rules, value, callback) => {
+              if (value === '') {
+                return callback(new Error('This field is required!'))
+              }
+              callback()
+            }
+          }
+        ],
+        password: [
+          {
+            validator: (rules, value, callback) => {
+              if (value === '') {
+                return callback(new Error('This field is required!'))
+              }
+              callback()
+            }
+          }
+        ]
       }
+    }
+  },
+  components: {
+    FormItemExtend
+  },
+  methods: {
+    modifyForm (field, value) {
+      this.$set(this.formData, field, value)
+    },
+    login () {
+      this.$refs.formRef.validate(valid => {
+        if (valid) {
+          alert('敬请期待')
+        }
+      })
     }
   }
 }
@@ -48,6 +109,7 @@ export default {
   height: 100px;
   padding-left: 20%;
   background-color: white;
+  line-height: 100px;
 }
 .logo-image {
   width: 170px;
@@ -55,6 +117,7 @@ export default {
 .text {
   font-size: 20px;
   font-weight: 700;
+  margin-left: 10px;
 }
 .main {
   position: absolute;
@@ -67,28 +130,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-}
-.card {
-  width: 400px;
-  height: 300px;
-  padding: 30px 20px;
-  background-color: white;
-  border-radius: 10px;
-  text-align: center;
-  .signin-button {
-    background-color: #5eb85c;
-    padding: 10px 50px;
-    border-radius: 7px;
-    margin-top: 20px;
-    font-size: 17px;
-  }
-  span {
-    position: absolute;
-    bottom: 15px;
-    left: 0;
-    width: 100%;
-    font-size: 15px;
-  }
+  background-image: url('../assets/img/event_cover_6.png');
 }
 .footer {
   position: absolute;
@@ -106,10 +148,27 @@ export default {
     font-size: 30px;
     font-weight: 700;
   }
-  .md-button {
+  .el-button {
+    border-radius: 7px;
+    padding: 10px, 20px;
     margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 15px;
   }
+}
+.login-button {
+  border-radius: 7px;
+  padding: 10px, 20px;
+  width: 80%;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 10px;
+}
+.signup {
+  text-align: center;
+  margin-top: 25px;
+  font-weight: 400;
+}
+.el-card {
+  width: 25%;
 }
 </style>

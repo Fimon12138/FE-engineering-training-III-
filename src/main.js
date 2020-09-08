@@ -5,7 +5,8 @@ import './plugins/element.js'
 import axios from 'axios'
 import './plugins/muse-ui.js'
 import './plugins/vue-material.js'
-import './assets/global.css'
+import './assets/global.less'
+import './assets/fonts/index.less'
 
 Vue.config.productionTip = false
 
