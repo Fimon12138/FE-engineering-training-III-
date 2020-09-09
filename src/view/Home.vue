@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="overflow: auto">
     <!-- header section -->
     <div class="header">
       <md-toolbar class="md-large md-transparent toolbar">
@@ -25,15 +25,31 @@
         </div>
       </md-toolbar>
     </div>
+    <!-- body -->
+    <div class="main">
+      <CarouselWithArrow
+        :itemList="recommendations"
+        class="carousel"
+      ></CarouselWithArrow>
+    </div>
   </div>
 </template>
 
 <script>
+import pic1 from '../assets/img/event_cover_3.png'
+import pic2 from '../assets/img/event_cover_6.png'
+import pic3 from '../assets/img/logo.png'
+import CarouselWithArrow from '../components/CarouselWithArrow'
+
 export default {
   data () {
     return {
-      searchPattern: ''
+      searchPattern: '',
+      recommendations: [pic1, pic2, pic3]
     }
+  },
+  components: {
+    CarouselWithArrow
   },
   methods: {
     login () {
@@ -63,5 +79,12 @@ export default {
 }
 .small-button-text:hover {
   color: #1bb1ba;
+}
+.carousel {
+  width: 80%;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 50px;
 }
 </style>
