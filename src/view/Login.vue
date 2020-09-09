@@ -107,7 +107,7 @@ export default {
 <style lang="less" scoped>
 .header {
   height: 100px;
-  padding-left: 20%;
+  padding-left: 10%;
   background-color: white;
   line-height: 100px;
 }
