@@ -96,7 +96,9 @@ export default {
     login () {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          alert('敬请期待')
+          // alert('敬请期待')
+          window.sessionStorage.setItem('name', this.formData.name)
+          this.$router.push('/home')
         }
       })
     }

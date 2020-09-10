@@ -17,8 +17,12 @@
           <!-- right: two buttons & icon -->
           <div class="md-toolbar-section-end">
             <span class="small-button-text" style="margin-right: 30px">我的票</span>
-            <div style="display: flex" @click="login">
+            <div v-if="isLogin" style="display: flex" @click="login">
               <span class="small-button-text" style="margin-right: 5px; line-height: 30px">登录</span>
+              <md-icon :md-src="require('../assets/svg/account_circle.svg')" style="width: 30px; height: 30px"></md-icon>
+            </div>
+            <div v-else style="display: flex" @click="profile">
+              <span class="small-button-text" style="margin-right: 5px; line-height: 30px">{{ userName }}</span>
               <md-icon :md-src="require('../assets/svg/account_circle.svg')" style="width: 30px; height: 30px"></md-icon>
             </div>
           </div>
@@ -45,6 +49,8 @@ export default {
   data () {
     return {
       searchPattern: '',
+      isLogin: true,
+      userName: '',
       recommendations: [pic1, pic2, pic3]
     }
   },
@@ -54,6 +60,12 @@ export default {
   methods: {
     login () {
       this.$router.push('/login')
+    }
+  },
+  created () {
+    this.userName = window.sessionStorage.getItem('name')
+    if (this.userName) {
+      this.isLogin = false
     }
   }
 }
@@ -75,6 +87,7 @@ export default {
 .small-button-text {
   font-size: 15px;
   font-weight: bold;
+  font-family: 'Quicksand-Bold';
   cursor: pointer;
 }
 .small-button-text:hover {
