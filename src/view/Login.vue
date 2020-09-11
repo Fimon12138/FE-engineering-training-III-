@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <img src="../assets/img/logo.png" alt="loading failed" class="logo-image">
-      <span class="text">会员登录</span>
+      <span class="text">Login</span>
     </div>
     <div class="main">
       <el-card>
@@ -16,15 +16,15 @@
             ></FormItemExtend>
           </el-form-item>
         </el-form>
-        <el-button type="success" class="login-button" @click="login">登录</el-button>
+        <el-button type="success" class="login-button" @click="login">Log in</el-button>
         <div class="signup">
-          还没有账号？ <a href="/#/signup">注册</a>
+          Do not have an account？ <a href="/#/signup">Sign up</a>
         </div>
       </el-card>
     </div>
     <div class="footer">
-      <span>或者，现在作为商家入驻票客</span>
-      <el-button type="primary">跳转至商家版</el-button>
+      <span>Or, Join us now as a seller</span>
+      <el-button type="primary">Go to seller version</el-button>
     </div>
   </div>
 </template>
@@ -44,7 +44,7 @@ export default {
       formSchema: [
         {
           iconUrl: accountSvg,
-          label: '用户名',
+          label: 'User Name',
           data: {
             field: 'name',
             type: 'input'
@@ -52,7 +52,7 @@ export default {
         },
         {
           iconUrl: lockSvg,
-          label: '密码',
+          label: 'Password',
           data: {
             field: 'password',
             type: 'input',
@@ -117,9 +117,10 @@ export default {
   width: 170px;
 }
 .text {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
   margin-left: 10px;
+  font-family: 'BalooTammudu-SemiBold';
 }
 .main {
   position: absolute;
@@ -149,6 +150,7 @@ export default {
   span {
     font-size: 30px;
     font-weight: 700;
+    font-family: 'Lineto-Brown-Bold';
   }
   .el-button {
     border-radius: 7px;

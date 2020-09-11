@@ -171,6 +171,10 @@ export default {
           {
             validator: (rules, value, callback) => {
               const child = this.$refs.confirm[0]
+              if (!this.formData.password) {
+                child.updateOk(false)
+                return callback()
+              }
               if (value !== this.formData.password) {
                 child.updateOk(false)
                 return callback(new Error('Inconsistent passwords!'))

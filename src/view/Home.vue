@@ -10,15 +10,15 @@
             <img src="../assets/img/logo.png" alt="loading failed" class="logo-image">
             <md-field class="search-area">
               <md-icon :md-src="require('../assets/svg/search.svg')"></md-icon>
-              <md-input v-model="searchPattern" placeholder="搜索活动"></md-input>
+              <md-input v-model="searchPattern" placeholder="Search"></md-input>
             </md-field>
           </div>
 
           <!-- right: two buttons & icon -->
           <div class="md-toolbar-section-end">
-            <span class="small-button-text" style="margin-right: 30px">我的票</span>
+            <span class="small-button-text" style="margin-right: 30px">My Tickets</span>
             <div v-if="isLogin" style="display: flex" @click="login">
-              <span class="small-button-text" style="margin-right: 5px; line-height: 30px">登录</span>
+              <span class="small-button-text" style="margin-right: 5px; line-height: 30px">Log in</span>
               <md-icon :md-src="require('../assets/svg/account_circle.svg')" style="width: 30px; height: 30px"></md-icon>
             </div>
             <div v-else style="display: flex" @click="profile">
