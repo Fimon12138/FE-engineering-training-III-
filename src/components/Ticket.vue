@@ -1,16 +1,10 @@
 <template>
-  <Ticket>
-
-  </Ticket>
+  <div class="container">
+  </div>
 </template>
 
 <script>
-import Ticket from '../components/Ticket'
-
 export default {
-  components: {
-    Ticket
-  }
 }
 </script>
 
