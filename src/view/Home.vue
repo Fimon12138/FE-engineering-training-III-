@@ -22,7 +22,7 @@
               <md-icon :md-src="require('../assets/svg/account_circle.svg')" style="width: 30px; height: 30px"></md-icon>
             </div>
             <div v-else style="display: flex" @click="profile">
-              <span class="small-button-text" style="margin-right: 5px; line-height: 30px">{{ userName }}</span>
+              <span class="small-button-text user-name" style="margin-right: 5px; line-height: 30px">{{ userName }}</span>
               <md-icon :md-src="require('../assets/svg/account_circle.svg')" style="width: 30px; height: 30px"></md-icon>
             </div>
           </div>
@@ -60,6 +60,9 @@ export default {
   methods: {
     login () {
       this.$router.push('/login')
+    },
+    profile () {
+      this.$router.push('/profile/')
     }
   },
   created () {
@@ -99,5 +102,11 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   margin-top: 50px;
+}
+.user-name {
+  width: 100px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

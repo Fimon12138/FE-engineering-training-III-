@@ -6,7 +6,7 @@
     <el-container>
       <el-aside width="200px">
         <img :src="pic" alt="error">
-        <span>{{ userName }}</span>
+        <span class="user-name">{{ userName }}</span>
         <el-divider></el-divider>
         <ul>
           <li v-for="item in listItems" :key="item.label"
@@ -139,5 +139,11 @@ export default {
   font-size: 50px;
   margin-left: 20px;
   margin-top: 50px;
+}
+.user-name {
+  width: 180px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 </style>

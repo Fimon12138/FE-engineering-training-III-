@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <img src="../assets/img/logo.png" alt="loading failed" class="logo-image">
-      <span class="text">Login</span>
+      <span class="text">Buyer Login</span>
     </div>
     <div class="main">
       <el-card>
@@ -47,7 +47,13 @@ export default {
           label: 'User Name',
           data: {
             field: 'name',
-            type: 'input'
+            type: 'input',
+            attrs: {
+              clearable: true
+            },
+            on: {
+              focus: () => this.clearValidation('name')
+            }
           }
         },
         {
@@ -57,7 +63,11 @@ export default {
             field: 'password',
             type: 'input',
             attrs: {
-              'show-password': true
+              'show-password': true,
+              clearable: true
+            },
+            on: {
+              focus: () => this.clearValidation('password')
             }
           }
         }
@@ -70,7 +80,8 @@ export default {
                 return callback(new Error('This field is required!'))
               }
               callback()
-            }
+            },
+            trigger: 'never'
           }
         ],
         password: [
@@ -80,7 +91,8 @@ export default {
                 return callback(new Error('This field is required!'))
               }
               callback()
-            }
+            },
+            trigger: 'never'
           }
         ]
       }
@@ -92,6 +104,9 @@ export default {
   methods: {
     modifyForm (field, value) {
       this.$set(this.formData, field, value)
+    },
+    clearValidation (field) {
+      this.$refs.formRef.clearValidate(field)
     },
     login () {
       this.$refs.formRef.validate(valid => {

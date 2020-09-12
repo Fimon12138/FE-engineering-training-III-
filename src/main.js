@@ -7,6 +7,9 @@ import './plugins/vue-material.js'
 import './assets/global.less'
 import './assets/fonts/index.less'
 
+import lottie from 'lottie-web'
+Vue.use(lottie)
+
 Vue.config.productionTip = false
 
 // TODO
