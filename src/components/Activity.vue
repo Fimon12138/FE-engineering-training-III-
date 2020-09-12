@@ -56,7 +56,6 @@ export default {
   .name {
     font-family: 'Lineto-Brown-Bold';
     font-size: 14px;
-    overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;

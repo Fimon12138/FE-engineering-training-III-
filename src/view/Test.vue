@@ -14,12 +14,20 @@
       date="1 Jan, 2020"
       style="margin-top: 30px"
     ></Activity>
+    <MainActivity
+      :imgUrl="logo"
+      :name="name"
+      location="Wuhan Center, Hongshan District, Wuhan, China"
+      date="1 Jan, 2020"
+      style="margin-top: 30px"
+    ></MainActivity>
   </div>
 </template>
 
 <script>
 import Ticket from '../components/Ticket'
 import Activity from '../components/Activity'
+import MainActivity from '../components/MainActivity'
 import logo from '../assets/img/vue-logo.png'
 
 export default {
@@ -33,7 +41,8 @@ export default {
   },
   components: {
     Ticket,
-    Activity
+    Activity,
+    MainActivity
   }
 }
 </script>
