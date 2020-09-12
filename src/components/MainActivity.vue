@@ -94,8 +94,7 @@ export default {
 .info {
   position: absolute;
   left: 0;
-  // bottom: -110px;
-  bottom: 0;
+  bottom: -110px;
   background-color: black;
   z-index: 1;
   width: 100%;
@@ -119,7 +118,7 @@ export default {
     overflow: hidden;
     /*! autoprefixer: off */
     -webkit-box-orient: vertical;
-    margin-top: 8px;
+    margin-top: 10px;
   }
   .location {
     font-size: 13px;
