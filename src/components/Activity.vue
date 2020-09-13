@@ -1,5 +1,9 @@
 <template>
   <div class="container-activity">
+    <div class="container-heart">
+      <div class="triangle-mask"></div>
+      <div ref="heart" class="heart" @click="like"></div>
+    </div>
     <img :src="logo" alt="error" class="logo">
     <div class="info">
       <p class="date">{{ date }}</p>
@@ -11,6 +15,11 @@
 </template>
 
 <script>
+import lottie from 'lottie-web'
+import likeAnimationData from '../assets/lottie_json/like_white.json'
+
+let animation
+
 export default {
   props: {
     logo: {
@@ -22,7 +31,44 @@ export default {
       type: String
     },
     location: String,
-    date: String
+    date: String,
+    star: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      isLike: this.star
+    }
+  },
+  methods: {
+    like () {
+      if (this.isLike) {
+        animation.playSegments([9, 0], true)
+        // TODO
+      } else {
+        animation.playSegments([0, 9], true)
+        // TODO
+      }
+      this.isLike = !this.isLike
+      // console.log(this.isLike)
+      // TODO
+    }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      // console.log(this.$refs.heart)
+      animation = lottie.loadAnimation({
+        container: this.$refs.heart,
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        animationData: likeAnimationData
+      })
+      // console.log(animation)
+      animation.goToAndStop(this.isLike ? 9 : 0, true)
+    })
   }
 }
 </script>
@@ -35,6 +81,8 @@ export default {
   display: flex;
   flex-direction: row;
   box-shadow: 0 0 7px #dddddd;
+  position: relative;
+  overflow: hidden;
 }
 .logo {
   width: 75px;
@@ -73,6 +121,40 @@ export default {
   .bottom {
     position: absolute;
     bottom: 0px;
+  }
+}
+.container-heart {
+  position: absolute;
+  top: -40px;
+  right: -60px;
+  width: 60px;
+  height: 40px;
+  border-top-right-radius: 10px;
+  background: linear-gradient(to top right, rgba(191, 191, 191, 0.1), rgba(0, 0, 0, 0.5));
+  .triangle-mask {
+    border-style: solid;
+    border-width: 20px 30px 20px 30px;
+    border-color: transparent transparent #fafafa #fafafa;
+    width: 0;
+    height: 0;
+  }
+  .heart {
+    z-index: 1;
+    position: absolute;
+    top: -2px;
+    right: 2px;
+    width: 30px;
+    height: 30px;
+  }
+}
+.container-activity:hover {
+  .container-heart {
+    top: 0;
+    right: 0;
+    -webkit-transition-property: top, right;
+    transition-property: top, right;
+    transition-duration: .3s;
+    -webkit-transition-duration: .3s;
   }
 }
 </style>
