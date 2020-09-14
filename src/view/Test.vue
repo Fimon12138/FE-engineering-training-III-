@@ -21,6 +21,12 @@
       date="1 Jan, 2020"
       style="margin-top: 30px"
     ></MainActivity>
+    <ActivityCategory
+      category="Concerts"
+      :main="main"
+      :sub="sub"
+      style="margin-top: 30px;"
+    ></ActivityCategory>
   </div>
 </template>
 
@@ -28,6 +34,7 @@
 import Ticket from '../components/Ticket'
 import Activity from '../components/Activity'
 import MainActivity from '../components/MainActivity'
+import ActivityCategory from '../components/ActivityCategory'
 import logo from '../assets/img/vue-logo.png'
 
 export default {
@@ -36,13 +43,58 @@ export default {
       logo,
       name: 'Liu Bo\'s Personal Concert - Wuhan Station',
       location: 'Wuhan Center',
-      date: '2020-1-1 19:00'
+      date: '2020-1-1 19:00',
+      main: {
+        imgUrl: logo,
+        name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+        location: 'Wuhan Center',
+        date: '2020-1-1 19:00'
+      },
+      sub: [
+        {
+          logo,
+          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+          location: 'Wuhan Center',
+          date: '2020-1-1 19:00'
+        },
+        {
+          logo,
+          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+          location: 'Wuhan Center',
+          date: '2020-1-1 19:00'
+        },
+        {
+          logo,
+          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+          location: 'Wuhan Center',
+          date: '2020-1-1 19:00'
+        },
+        {
+          logo,
+          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+          location: 'Wuhan Center',
+          date: '2020-1-1 19:00'
+        },
+        {
+          logo,
+          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+          location: 'Wuhan Center',
+          date: '2020-1-1 19:00'
+        },
+        {
+          logo,
+          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+          location: 'Wuhan Center',
+          date: '2020-1-1 19:00'
+        }
+      ]
     }
   },
   components: {
     Ticket,
     Activity,
-    MainActivity
+    MainActivity,
+    ActivityCategory
   }
 }
 </script>

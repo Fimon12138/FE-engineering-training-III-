@@ -83,7 +83,6 @@ export default {
   width: 210px;
   height: 280px;
   border-radius: 7px;
-  box-shadow: 0 0 7px #dddddd;
   position: relative;
   overflow: hidden;
 }
@@ -102,6 +101,9 @@ export default {
   background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
   color: white;
   padding: 10px 5px;
+
+  transition-duration: .3s;
+  -webkit-transition-duration: 1s;
   p {
     margin: 0;
   }

@@ -35,6 +35,14 @@
         :itemList="recommendations"
         class="carousel"
       ></CarouselWithArrow>
+      <div class="activities-area">
+        <ActivityCategory
+          v-for="(category, index) in categories" :key="index"
+          :category="category.title"
+          :main="category.main"
+          :sub="category.sub"
+        ></ActivityCategory>
+      </div>
     </div>
   </div>
 </template>
@@ -43,7 +51,9 @@
 import pic1 from '../assets/img/event_cover_3.png'
 import pic2 from '../assets/img/event_cover_6.png'
 import pic3 from '../assets/img/logo.png'
+import logo from '../assets/img/vue-logo.png'
 import CarouselWithArrow from '../components/CarouselWithArrow'
+import ActivityCategory from '../components/ActivityCategory'
 
 export default {
   data () {
@@ -51,11 +61,61 @@ export default {
       searchPattern: '',
       isLogin: true,
       userName: '',
-      recommendations: [pic1, pic2, pic3]
+      recommendations: [pic1, pic2, pic3],
+      categories: [
+        {
+          title: 'Concerts',
+          main: {
+            imgUrl: logo,
+            name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+            location: 'Wuhan Center',
+            date: '2020-1-1 19:00'
+          },
+          sub: [
+            {
+              logo,
+              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+              location: 'Wuhan Center',
+              date: '2020-1-1 19:00'
+            },
+            {
+              logo,
+              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+              location: 'Wuhan Center',
+              date: '2020-1-1 19:00'
+            },
+            {
+              logo,
+              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+              location: 'Wuhan Center',
+              date: '2020-1-1 19:00'
+            },
+            {
+              logo,
+              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+              location: 'Wuhan Center',
+              date: '2020-1-1 19:00'
+            },
+            {
+              logo,
+              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+              location: 'Wuhan Center',
+              date: '2020-1-1 19:00'
+            },
+            {
+              logo,
+              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
+              location: 'Wuhan Center',
+              date: '2020-1-1 19:00'
+            }
+          ]
+        }
+      ]
     }
   },
   components: {
-    CarouselWithArrow
+    CarouselWithArrow,
+    ActivityCategory
   },
   methods: {
     login () {
@@ -96,6 +156,9 @@ export default {
 .small-button-text:hover {
   color: #1bb1ba;
 }
+.main {
+  margin-bottom: 50px;
+}
 .carousel {
   width: 80%;
   position: relative;
@@ -108,5 +171,12 @@ export default {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.activities-area {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>

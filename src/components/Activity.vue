@@ -80,7 +80,6 @@ export default {
   border-radius: 10px;
   display: flex;
   flex-direction: row;
-  box-shadow: 0 0 7px #dddddd;
   position: relative;
   overflow: hidden;
 }
@@ -131,6 +130,9 @@ export default {
   height: 40px;
   border-top-right-radius: 10px;
   background: linear-gradient(to top right, rgba(191, 191, 191, 0.1), rgba(0, 0, 0, 0.5));
+
+  transition-duration: .3s;
+  -webkit-transition-duration: 1s;
   .triangle-mask {
     border-style: solid;
     border-width: 20px 30px 20px 30px;
