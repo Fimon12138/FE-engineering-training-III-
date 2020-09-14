@@ -18,8 +18,6 @@
 import lottie from 'lottie-web'
 import likeAnimationData from '../assets/lottie_json/like_white.json'
 
-let animation
-
 export default {
   props: {
     logo: {
@@ -39,16 +37,17 @@ export default {
   },
   data () {
     return {
-      isLike: this.star
+      isLike: this.star,
+      animation: undefined
     }
   },
   methods: {
     like () {
       if (this.isLike) {
-        animation.playSegments([9, 0], true)
+        this.animation.playSegments([9, 0], true)
         // TODO
       } else {
-        animation.playSegments([0, 9], true)
+        this.animation.playSegments([0, 9], true)
         // TODO
       }
       this.isLike = !this.isLike
@@ -58,16 +57,17 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      // console.log(this.$refs.heart)
-      animation = lottie.loadAnimation({
+      // console.log(this.$refs)
+      this.animation = lottie.loadAnimation({
         container: this.$refs.heart,
         renderer: 'svg',
+        name: this.name,
         loop: false,
         autoplay: false,
         animationData: likeAnimationData
       })
       // console.log(animation)
-      animation.goToAndStop(this.isLike ? 9 : 0, true)
+      this.animation.goToAndStop(this.isLike ? 9 : 0, true)
     })
   }
 }
