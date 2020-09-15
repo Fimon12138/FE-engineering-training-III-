@@ -5,7 +5,11 @@ import Home from '../view/Home'
 import Login from '../view/Login'
 import Signup from '../view/Signup'
 import Profile from '../view/Profile'
+import ConfirmOrder from '../view/ConfirmOrder'
 import Test from '../view/Test'
+
+import indexPage from '../view/IndexPage'
+import ActivityInfo from '../view/ActivityInfo'
 
 import Tickets from '../view/ProfileItems/Tickets'
 import Orders from '../view/ProfileItems/Orders'
@@ -21,7 +25,18 @@ const routes = [
   },
   {
     path: '/home',
-    component: Home
+    component: Home,
+    redirect: '/indexPage',
+    children: [
+      {
+        path: '/indexPage',
+        component: indexPage
+      },
+      {
+        path: '/activityInfo',
+        component: ActivityInfo
+      }
+    ]
   },
   {
     path: '/login',
@@ -53,6 +68,10 @@ const routes = [
         component: PersonalInfo
       }
     ]
+  },
+  {
+    path: '/confirmOrder',
+    component: ConfirmOrder
   },
   {
     path: '/test',

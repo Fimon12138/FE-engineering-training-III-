@@ -131,7 +131,7 @@ export default {
   border-top-right-radius: 10px;
   background: linear-gradient(to top right, rgba(191, 191, 191, 0.1), rgba(0, 0, 0, 0.5));
 
-  transition-duration: .3s;
+  transition-duration: 1s;
   -webkit-transition-duration: 1s;
   .triangle-mask {
     border-style: solid;

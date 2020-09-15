@@ -102,7 +102,7 @@ export default {
   color: white;
   padding: 10px 5px;
 
-  transition-duration: .3s;
+  transition-duration: 1s;
   -webkit-transition-duration: 1s;
   p {
     margin: 0;

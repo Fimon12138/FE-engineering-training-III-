@@ -31,18 +31,7 @@
     </div>
     <!-- body -->
     <div class="main">
-      <CarouselWithArrow
-        :itemList="recommendations"
-        class="carousel"
-      ></CarouselWithArrow>
-      <div class="activities-area">
-        <ActivityCategory
-          v-for="(category, index) in categories" :key="index"
-          :category="category.title"
-          :main="category.main"
-          :sub="category.sub"
-        ></ActivityCategory>
-      </div>
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -52,8 +41,6 @@ import pic1 from '../assets/img/event_cover_3.png'
 import pic2 from '../assets/img/event_cover_6.png'
 import pic3 from '../assets/img/logo.png'
 import logo from '../assets/img/vue-logo.png'
-import CarouselWithArrow from '../components/CarouselWithArrow'
-import ActivityCategory from '../components/ActivityCategory'
 
 export default {
   data () {
@@ -113,10 +100,6 @@ export default {
       ]
     }
   },
-  components: {
-    CarouselWithArrow,
-    ActivityCategory
-  },
   methods: {
     login () {
       this.$router.push('/login')
@@ -159,24 +142,10 @@ export default {
 .main {
   margin-bottom: 50px;
 }
-.carousel {
-  width: 80%;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 50px;
-}
 .user-name {
   width: 100px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-.activities-area {
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 </style>
