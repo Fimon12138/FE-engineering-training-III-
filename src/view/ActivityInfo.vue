@@ -144,9 +144,10 @@ export default {
         'Activity=' + this.title +
         '&Time=' + this.time +
         '&Location=' + this.location +
-        '&Price=' + this.price + ' USD' +
+        '&Price=' + this.price +
         '&Quantity=' + this.quantity +
-        '&Total=' + this.totalPrice + ' USD'
+        '&Total=' + this.totalPrice +
+        '&Logo=' + logo
       this.$router.push(requestUrl)
     }
   },

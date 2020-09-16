@@ -1,84 +1,190 @@
 <template>
   <div class="container-confirm-order">
-    <span class="title">Confirm Your Order</span>
+    <md-steppers :md-active-step.sync="activeStep" md-linear>
+      <md-step id="first" md-label="Choose Products" :md-editable="false" @click="clickStepFirst"></md-step>
+      <md-step id="second" md-label="Confirm the Order" :md-editable="false" @click="clickStepSecond">
+        <div class="delivery">
+          <span class="sub-title title">Delivery Method</span>
+          <div class="code">
+            <img :src="qrCode" alt="error">
+          </div>
+          <span class="e-ticket">e-Ticket</span>
+        </div>
 
-    <div class="info-area">
-      <div v-for="(item, index) in list" :key="index" class="info-item">
-        <md-icon :md-src="yes"></md-icon>
-        <span class="label">{{ item.label }}:</span>
-        <span class="value">{{ item.value }}</span>
-      </div>
-      <div ref="loadingContainer" class="animation"></div>
-    </div>
+        <el-divider></el-divider>
 
-    <div v-show="showButton">
-      <el-button class="button" type="danger">Confirm and Pay</el-button>
-      <span class="note">Powered by ZJPay</span>
-      <img :src="ZJPay" alt="error" class="zjpay-logo">
-    </div>
+        <div class="contact">
+          <span class="sub-title">Contact Information</span>
+          <el-form ref="contactForm" :rules="contactRules" :model="contactForm" label-width="60px">
+            <el-form-item label="Name:" prop="name">
+              <el-input v-model="contactForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="Email:" prop="email">
+              <el-input v-model="contactForm.email"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+
+        <el-divider></el-divider>
+
+        <div class="pay">
+          <span class="sub-title">Pay Method</span>
+          <div class="selected">
+            <div class="method">
+              <img :src="ZJPay" alt="error">
+              <span>ZJ Pay</span>
+            </div>
+
+            <!-- 右下角的打勾效果 -->
+            <div class="tick"></div>
+            <img :src="select" alt="error" class="tick-img">
+          </div>
+        </div>
+
+        <el-divider></el-divider>
+
+        <div class="order">
+          <span class="sub-title">Confirm Order Details</span>
+          <el-table
+            :data="orderParams"
+            style="width: 100%">
+            <el-table-column
+              label="Activity Info"
+              width="350px">
+              <template slot-scope="scope">
+                <Ticket
+                  :logo="scope.row.Logo"
+                  :name="scope.row.Activity"
+                  :location="scope.row.Location"
+                  :date="scope.row.Time"
+                ></Ticket>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="Price"
+              label="Price (USD)">
+            </el-table-column>
+            <el-table-column
+              prop="Quantity"
+              label="Quantity">
+            </el-table-column>
+            <el-table-column
+              prop="Total"
+              label="Total (USD)">
+            </el-table-column>
+          </el-table>
+        </div>
+
+        <el-divider></el-divider>
+
+        <div class="button-area">
+          <el-checkbox v-model="checked" @change="setWarningStatus">Agree to terms of TicketHub</el-checkbox>
+          <span style="color: red; font-size: 10px" v-show="showWarning">You need to agree to our terms before submitting your order!</span>
+          <el-button type="danger" @click="submit">Submit</el-button>
+        </div>
+      </md-step>
+      <md-step id="third" md-label="Pay" :md-editable="false">
+        <div class="step-third">
+          <div v-if="playAnimation" ref="animationContainer" class="animation"></div>
+          <img v-else :src="mall" alt="error" class="mall-img">
+          <span>USD<span class="money">{{ orderParams[0].Total }}</span></span>
+          <el-button type="danger" class="third-pay" @click="pay">Pay</el-button>
+        </div>
+      </md-step>
+      <md-step id="fourth" md-label="Get Your Tickets" :md-editable="false"></md-step>
+    </md-steppers>
   </div>
 </template>
 
 <script>
 import yes from '../assets/svg/check_circle_green.svg'
-import lottie from 'lottie-web'
-import loadingJSON from '../assets/lottie_json/loading.json'
+import qrCode from '../assets/svg/qr_code.svg'
+import select from '../assets/svg/done-white.svg'
+import mall from '../assets/svg/local_mall.svg'
 import ZJPay from '../assets/img/zjpay.png'
+import Ticket from '../components/Ticket'
+
+import Lottie from 'lottie-web'
+
+const jsonPath = 'https://assets2.lottiefiles.com/private_files/lf30_nrnx3s.json'
 
 export default {
   data () {
     return {
-      orderParams: [],
-      list: [],
       yes,
-      animation: undefined,
       ZJPay,
-      showButton: false
+      qrCode,
+      select,
+      mall,
+
+      activeStep: 'second',
+      contactForm: {
+        userName: '',
+        email: ''
+      },
+      contactRules: {},
+
+      orderParams: [],
+      checked: true,
+      showWarning: false,
+      playAnimation: false,
+      animation: undefined
     }
   },
+  components: {
+    Ticket
+  },
   methods: {
-    addItem (index) {
-      // console.log(index)
-      this.list.push(this.orderParams[index])
-      if (index + 1 < this.orderParams.length) {
-        const func = this.addItem
-        setTimeout(function () {
-          func(index + 1)
-        }, 1000)
+    submit () {
+      if (!this.checked) {
+        this.showWarning = true
+        return
       }
-      if (index === this.orderParams.length - 1) {
-        const param = this.animation
-        setTimeout(function () {
-          param.destroy()
-        }, 700)
-        this.showButton = true
+
+      this.$refs.contactForm.validate(valid => {
+        if (valid) {
+          this.activeStep = 'third'
+        }
+      })
+    },
+    pay () {
+      this.playAnimation = true
+      this.$nextTick(() => {
+        this.animation = Lottie.loadAnimation({
+          container: this.$refs.animationContainer,
+          renderer: 'svg',
+          loop: false,
+          autoplay: true,
+          path: jsonPath
+        })
+        this.animation.addEventListener('complete', () => {
+          setTimeout(this.gotoStepFour(), 1000)
+        })
+      })
+    },
+    setWarningStatus () {
+      if (this.checked) {
+        this.showWarning = false
       }
+    },
+    gotoStepFour () {
+      this.activeStep = 'fourth'
+      this.animation.destroy()
+    },
+    clickStepFirst () {
+      console.log('first')
+    },
+    clickStepSecond () {
+      console.log('second')
+    },
+    clickStepThird () {
+      console.log('third')
     }
   },
   created () {
     const params = this.$route.query
-    console.log(params)
-    this.orderParams = Object.keys(params).map(item => {
-      return {
-        label: item,
-        value: params[item]
-      }
-    })
+    this.orderParams = [params]
     console.log(this.orderParams)
-  },
-  mounted () {
-    this.$nextTick(() => {
-      this.animation = lottie.loadAnimation({
-        container: this.$refs.loadingContainer,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData: loadingJSON
-      })
-      this.animation.setSpeed(0.7)
-
-      this.addItem(0)
-    })
   }
 }
 </script>
@@ -90,68 +196,177 @@ export default {
   left: 50%;
   transform: translateX(-50%);
 
-  padding-top: 50px;
+  padding-top: 30px;
+  padding-bottom: 50px;
 
   font-family: 'Lineto-Brown-Bold';
-}
-.title {
-  font-size: 30px;
+
+  background-color: white;
 }
 
-.info-area {
+.md-steppers {
+  /deep/ .md-steppers-navigation {
+    box-shadow: none;
+  }
+}
+
+.el-divider {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.delivery {
   display: flex;
   flex-direction: column;
+  padding-left: 25px;
 
-  margin-top: 20px;
+  .code {
+    background-color: #ff1268;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+
+    img {
+      width: 60px;
+      height: 60px;
+
+      margin-left: 10px;
+      margin-top: 10px;
+    }
+  }
+  .e-ticket {
+    font-family: 'NotoSansSC-Regular';
+    color: #ff1268;
+    font-size: 13px;
+
+    margin-top: 10px;
+    margin-left: 15px;
+  }
 }
 
-.info-item {
+.contact {
   display: flex;
-  flex-direction: row;
-  padding: 10px 40px;
-  border-radius: 5px;
+  flex-direction: column;
+  padding-left: 25px;
 
-  margin: 10px 0;
-  background-color: #ecf3fe;
+  .el-form {
+    .el-input {
+      width: 200px;
+    }
+  }
+}
 
-  .md-icon {
-    margin: 0;
+.pay {
+  display: flex;
+  flex-direction: column;
+  padding-left: 25px;
+
+  .selected {
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 5px;
+    border-color: #ff1369;
+
+    padding: 20px 30px;
+    width: 160px;
+
+    overflow: hidden;
+    position: relative;
+
+    .method {
+      display: flex;
+      flex-direction: column;
+
+      img {
+        width: 100px;
+      }
+
+      span {
+        color: grey;
+        margin-top: 3px;
+        margin-left: 25px;
+      }
+    }
+
+    .tick {
+      position: absolute;
+      right: -20px;
+      bottom: 0;
+
+      width: 0;
+      height: 0;
+
+      border-style: solid;
+      border-width: 20px;
+      border-color: transparent transparent #ff1268 transparent;
+    }
+
+    .tick-img {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+
+      width: 14px;
+      height: 14px;
+
+      z-index: 1;
+    }
+  }
+}
+
+.order {
+  display: flex;
+  flex-direction: column;
+  padding-left: 25px;
+}
+
+.button-area {
+  display: flex;
+  flex-direction: column;
+  padding-right: 20px;
+  text-align: right;
+
+  margin-top: 30px;
+
+  .el-button {
+    margin-top: 30px;
+    width: 200px;
+    margin-left: auto;
+  }
+}
+
+.sub-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.step-third {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .mall-img {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    padding: 10px;
+    background-color: #ee4d2d;
+    margin-bottom: 20px;
   }
 
-  .label {
+  .animation {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+  }
+
+  .money {
     margin-left: 10px;
-    font-size: 20px;
-    padding-top: 3px;
   }
 
-  .value {
-    margin-left: 20px;
-    padding-top: 9px;
-
-    font-family: 'BalooTammudu-SemiBold';
-    font-size: 18px;
-    color: #ff2d79;
+  .third-pay {
+    margin-top: 20px;
+    width: 200px;
   }
-}
-
-.animation {
-  width: 24px;
-  height: 24px;
-}
-
-.button {
-  width: 200px;
-  font-size: 16px;
-  margin-left: 60px;
-}
-
-.zjpay-logo {
-  height: 30px;
-  margin-left: 5px;
-}
-.note {
-  font-size: 12px;
-  color: grey;
-  margin-left: 30px;
 }
 </style>
