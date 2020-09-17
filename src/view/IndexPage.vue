@@ -82,6 +82,9 @@ export default {
   components: {
     CarouselWithArrow,
     ActivityCategory
+  },
+  created () {
+    // 获取活动数据
   }
 }
 </script>

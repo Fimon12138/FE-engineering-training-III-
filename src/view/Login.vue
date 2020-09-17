@@ -16,7 +16,10 @@
             ></FormItemExtend>
           </el-form-item>
         </el-form>
-        <el-button type="success" class="login-button" @click="login">Log in</el-button>
+        <el-button type="success" class="login-button" @click="login" :disabled="disable">
+          Log in
+        </el-button>
+        <div ref="loading" v-show="showLoading" class="loading"></div>
         <div class="signup">
           Do not have an account？ <a href="/#/signup">Sign up</a>
         </div>
@@ -33,10 +36,17 @@
 import FormItemExtend from '../components/FormItemExtend'
 import accountSvg from '../assets/svg/account_circle_grey.svg'
 import lockSvg from '../assets/svg/lock.svg'
+import Lottie from 'lottie-web'
+import sha512 from 'js-sha512'
+
+const loadingJSONPath = 'https://assets9.lottiefiles.com/packages/lf20_F7WfWB.json'
 
 export default {
   data () {
     return {
+      animation: undefined,
+      disable: false,
+      showLoading: false,
       formData: {
         name: '',
         password: ''
@@ -111,12 +121,44 @@ export default {
     login () {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          // alert('敬请期待')
-          window.sessionStorage.setItem('name', this.formData.name)
-          this.$router.push('/home')
+          this.disable = true
+          this.showLoading = true
+          this.animation.play()
+
+          const params = {
+            username: this.formData.name,
+            password: sha512(this.formData.password)
+          }
+          console.log(params)
+          this.$http.post('/login', params).then(res => {
+            console.log(res)
+
+            window.sessionStorage.setItem('name', this.formData.name)
+            window.sessionStorage.setItem('token', res.userId)
+            this.$router.push('/home')
+          }).catch(err => {
+            console.log(err)
+            alert(err)
+
+            this.animation.destroy()
+            this.showLoading = false
+            this.$refs.formRef.resetFields()
+            this.disable = false
+          })
         }
       })
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.animation = Lottie.loadAnimation({
+        container: this.$refs.loading,
+        renderer: 'svg',
+        loop: true,
+        autoplay: false,
+        path: loadingJSONPath
+      })
+    })
   }
 }
 </script>
@@ -181,6 +223,10 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   margin-top: 10px;
+}
+.loading {
+  height: 50px;
+  margin-bottom: -30px;
 }
 .signup {
   text-align: center;
