@@ -35,8 +35,20 @@
 
     <RemarkActivity
       :comment="comment"
+      :index="0"
       style="margin-top: 30px"
     ></RemarkActivity>
+
+    <RemarkActivity
+      :comment="comment"
+      :index="1"
+      style="margin-top: 30px"
+    ></RemarkActivity>
+
+    <RemarkProfile
+      :comment="commentP"
+      style="margin-top: 30px"
+    ></RemarkProfile>
   </div>
 </template>
 
@@ -47,8 +59,10 @@ import MainActivity from '../components/MainActivity'
 import ActivityCategory from '../components/ActivityCategory'
 import Order from '../components/Order'
 import RemarkActivity from '../components/RemarkActivity'
+import RemarkProfile from '../components/RemarkProfile'
 
 import logo from '../assets/img/vue-logo.png'
+import activityPic from '../assets/img/activity.png'
 
 export default {
   data () {
@@ -67,6 +81,11 @@ export default {
       comment: {
         avatar: logo,
         nickname: 'yihang lu',
+        commentText: 'Test '.repeat(20)
+      },
+      commentP: {
+        logo: activityPic,
+        name: 'Liu Bo\'s Personal Concert - Wuhan Station',
         commentText: 'Test '.repeat(20)
       },
       main: {
@@ -121,7 +140,8 @@ export default {
     MainActivity,
     ActivityCategory,
     Order,
-    RemarkActivity
+    RemarkActivity,
+    RemarkProfile
   }
 }
 </script>
