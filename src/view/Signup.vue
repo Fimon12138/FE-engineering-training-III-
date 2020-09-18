@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="sign-up-box">
+    <div class="sign-up-box" v-show="!isSuccess">
       <div>
         <img src="../assets/img/logo.png" alt="loading failed" class="logo-image">
       </div>
@@ -18,20 +18,38 @@
           ></FormItemExtend>
         </el-form-item>
       </el-form>
-      <el-button type="success" @click="signup">Join</el-button>
+      <el-button type="success" :disabled="disable" @click="signup">Join</el-button>
+      <div ref="loading" v-show="showLoading" class="loading"></div>
       <div class="login">
         Already have an account? <a href="/#/login">Log in</a>
+      </div>
+    </div>
+    <div class="success-reminder" v-show="isSuccess">
+      <div ref="successAnimation" class="success"></div>
+      <span>You have successfully registered!</span>
+      <div style="text-align: center">
+        <el-button type="success" @click="jumpToLogin">Login Now !</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Lottie from 'lottie-web'
 import FormItemExtend from '../components/FormItemExtend'
+import sha512 from 'js-sha512'
+
+const loadingJSONPath = 'https://assets9.lottiefiles.com/packages/lf20_F7WfWB.json'
+const successJSONPath = 'https://assets2.lottiefiles.com/private_files/lf30_nrnx3s.json'
 
 export default {
   data () {
     return {
+      isSuccess: false,
+      showLoading: false,
+      disable: false,
+      animation: undefined,
+      animationSuccess: undefined,
       formData: {
         email: '',
         name: '',
@@ -158,7 +176,7 @@ export default {
               const noUpper = /^[a-z0-9]*$/.test(value)
               const noLower = /^[A-Z0-9]*$/.test(value)
               const noNumber = /^[a-zA-Z]*$/.test(value)
-              if ((noUpper && noLower) || (noUpper && noLower) || (noLower && noNumber)) {
+              if ((noUpper && noLower) || (noUpper && noNumber) || (noLower && noNumber)) {
                 child.updateOk(false)
                 return callback(new Error('Format error!'))
               }
@@ -200,10 +218,54 @@ export default {
     signup () {
       this.$refs.formRef.validate(valid => {
         if (valid) {
-          alert('敬请期待！')
+          this.disable = true
+          this.showLoading = true
+          this.animation.play()
+
+          const params = {
+            email: this.formData.email,
+            username: this.formData.name,
+            password: sha512(this.formData.password),
+            type: 'user'
+          }
+          console.log(params)
+          this.$http.post('/signup', params).then(res => {
+            console.log(res)
+
+            this.isSuccess = true
+            this.animationSuccess.play()
+          }).catch(err => {
+            // console.log(err)
+            alert(err)
+
+            this.animation.stop()
+            this.showLoading = false
+            this.disable = false
+          })
         }
       })
+    },
+    jumpToLogin () {
+      this.$router.push('/login')
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.animation = Lottie.loadAnimation({
+        container: this.$refs.loading,
+        renderer: 'svg',
+        loop: true,
+        autoplay: false,
+        path: loadingJSONPath
+      })
+      this.animationSuccess = Lottie.loadAnimation({
+        container: this.$refs.successAnimation,
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: successJSONPath
+      })
+    })
   }
 }
 </script>
@@ -247,5 +309,39 @@ export default {
   text-align: center;
   margin-top: 25px;
   font-weight: 400;
+}
+.loading {
+  height: 50px;
+  margin-bottom: -30px;
+}
+
+.success-reminder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  .success {
+    width: 60px;
+  }
+
+  span {
+    text-align: center;
+
+    font-family: 'Lineto-Brown-Bold';
+    font-size: 25px;
+
+    margin-top: 30px;
+  }
+
+  .el-button {
+    width: 200px;
+    margin-top: 30px;
+  }
 }
 </style>

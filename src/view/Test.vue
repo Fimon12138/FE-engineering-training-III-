@@ -49,6 +49,11 @@
       :comment="commentP"
       style="margin-top: 30px"
     ></RemarkProfile>
+
+    <ActivityForMore
+      :activity="activity"
+      style="margin-top: 30px"
+    ></ActivityForMore>
   </div>
 </template>
 
@@ -60,9 +65,11 @@ import ActivityCategory from '../components/ActivityCategory'
 import Order from '../components/Order'
 import RemarkActivity from '../components/RemarkActivity'
 import RemarkProfile from '../components/RemarkProfile'
+import ActivityForMore from '../components/ActivityForMore'
 
 import logo from '../assets/img/vue-logo.png'
 import activityPic from '../assets/img/activity.png'
+import activityVertical from '../assets/img/activityVertical.jpg'
 
 export default {
   data () {
@@ -71,6 +78,7 @@ export default {
       name: 'Liu Bo\'s Personal Concert - Wuhan Station',
       location: 'Wuhan Center',
       date: '2020-1-1 19:00',
+      activity: {},
       order: {
         name: 'Liu Bo\'s Personal Concert - Wuhan Station',
         id: '0021',
@@ -141,7 +149,24 @@ export default {
     ActivityCategory,
     Order,
     RemarkActivity,
-    RemarkProfile
+    RemarkProfile,
+    ActivityForMore
+  },
+  created () {
+    this.$http.get('https://run.mocky.io/v3/0e0b47c6-6310-4b81-b6f1-ebf11968b751').then(res => {
+      console.log(res)
+      console.log(res.data)
+      console.log(typeof res.data)
+
+      this.$set(this.activity, 'logo', res.data.imageColumn)
+      this.$set(this.activity, 'name', res.data.ticketName)
+      this.$set(this.activity, 'location', res.data.location)
+      this.$set(this.activity, 'date', res.data.startTime)
+
+      console.log(this.activity)
+    }).catch(err => {
+      console.log(err)
+    })
   }
 }
 </script>

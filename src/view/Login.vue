@@ -140,9 +140,8 @@ export default {
             console.log(err)
             alert(err)
 
-            this.animation.destroy()
+            this.animation.play()
             this.showLoading = false
-            this.$refs.formRef.resetFields()
             this.disable = false
           })
         }

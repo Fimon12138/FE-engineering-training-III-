@@ -91,8 +91,8 @@ export default {
   .sub-activities {
     justify-content: flex-end;
     display: flex;
-    flex-flow: row wrap;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
     .sub-activity {
       margin-left: 10px;
       margin-right: 10px;

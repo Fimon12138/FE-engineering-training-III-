@@ -9,6 +9,7 @@ import ConfirmOrder from '../view/ConfirmOrder'
 import Test from '../view/Test'
 
 import indexPage from '../view/IndexPage'
+import AllActivities from '../view/AllActivities'
 import ActivityInfo from '../view/ActivityInfo'
 
 import Tickets from '../view/ProfileItems/Tickets'
@@ -31,6 +32,10 @@ const routes = [
       {
         path: '/indexPage',
         component: indexPage
+      },
+      {
+        path: '/allActivities',
+        component: AllActivities
       },
       {
         path: '/activityInfo',

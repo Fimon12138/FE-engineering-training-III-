@@ -16,13 +16,21 @@
 
           <!-- right: two buttons & icon -->
           <div class="md-toolbar-section-end">
-            <span class="small-button-text" style="margin-right: 30px">My Tickets</span>
+            <span class="small-button-text" style="margin-right: 30px" @click="tickets">My Tickets</span>
             <div v-if="isLogin" style="display: flex" @click="login">
               <span class="small-button-text" style="margin-right: 5px; line-height: 30px">Log in</span>
               <md-icon :md-src="require('../assets/svg/account_circle.svg')" style="width: 30px; height: 30px"></md-icon>
             </div>
-            <div v-else style="display: flex" @click="profile">
-              <span class="small-button-text user-name" style="margin-right: 5px; line-height: 30px">{{ userName }}</span>
+            <div v-else style="display: flex">
+              <el-popover
+                placement="bottom"
+                trigger="hover">
+                <div class="padel">
+                  <span class="small-button-text" @click="profile">Profile</span>
+                  <span class="small-button-text" style="margin-top: 10px" @click="logout">Log out</span>
+                </div>
+                <span class="small-button-text user-name" style="margin-right: 5px; line-height: 30px" slot="reference">{{ userName }}</span>
+              </el-popover>
               <md-icon :md-src="require('../assets/svg/account_circle.svg')" style="width: 30px; height: 30px"></md-icon>
             </div>
           </div>
@@ -37,67 +45,12 @@
 </template>
 
 <script>
-import pic1 from '../assets/img/event_cover_3.png'
-import pic2 from '../assets/img/event_cover_6.png'
-import pic3 from '../assets/img/logo.png'
-import logo from '../assets/img/vue-logo.png'
-
 export default {
   data () {
     return {
       searchPattern: '',
       isLogin: true,
-      userName: '',
-      recommendations: [pic1, pic2, pic3],
-      categories: [
-        {
-          title: 'Concerts',
-          main: {
-            imgUrl: logo,
-            name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-            location: 'Wuhan Center',
-            date: '2020-1-1 19:00'
-          },
-          sub: [
-            {
-              logo,
-              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-              location: 'Wuhan Center',
-              date: '2020-1-1 19:00'
-            },
-            {
-              logo,
-              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-              location: 'Wuhan Center',
-              date: '2020-1-1 19:00'
-            },
-            {
-              logo,
-              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-              location: 'Wuhan Center',
-              date: '2020-1-1 19:00'
-            },
-            {
-              logo,
-              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-              location: 'Wuhan Center',
-              date: '2020-1-1 19:00'
-            },
-            {
-              logo,
-              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-              location: 'Wuhan Center',
-              date: '2020-1-1 19:00'
-            },
-            {
-              logo,
-              name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-              location: 'Wuhan Center',
-              date: '2020-1-1 19:00'
-            }
-          ]
-        }
-      ]
+      userName: ''
     }
   },
   methods: {
@@ -106,6 +59,14 @@ export default {
     },
     profile () {
       this.$router.push('/profile/')
+    },
+    logout () {
+      window.sessionStorage.removeItem('name')
+      window.sessionStorage.removeItem('token')
+      location.reload()
+    },
+    tickets () {
+      this.$router.push('/tickets')
     }
   },
   created () {
@@ -143,9 +104,21 @@ export default {
   margin-bottom: 50px;
 }
 .user-name {
-  width: 100px;
+  max-width: 100px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.padel {
+  display: flex;
+  flex-direction: column;
+
+  padding: 5px 10px;
+  width: 100%;
+
+  span {
+    text-align: center;
+  }
 }
 </style>
