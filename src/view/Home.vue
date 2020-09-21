@@ -37,9 +37,16 @@
         </div>
       </md-toolbar>
     </div>
+
     <!-- body -->
     <div class="main">
       <router-view></router-view>
+    </div>
+
+    <el-divider></el-divider>
+    <div class="footer">
+      <span>A Work of ZhengJing Team</span>
+      <!-- <img src="" alt=""> -->
     </div>
   </div>
 </template>
@@ -119,6 +126,19 @@ export default {
 
   span {
     text-align: center;
+  }
+}
+
+.footer {
+  padding-top: 30px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  span {
+    font-family: 'Lineto-Brown-Bold';
+    font-size: 20px;
   }
 }
 </style>

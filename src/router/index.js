@@ -14,7 +14,7 @@ import ActivityInfo from '../view/ActivityInfo'
 
 import Tickets from '../view/ProfileItems/Tickets'
 import Orders from '../view/ProfileItems/Orders'
-import ZJPay from '../view/ProfileItems/ZJPay'
+import Favorites from '../view/ProfileItems/Favorites'
 import PersonalInfo from '../view/ProfileItems/PersonalInfo'
 
 Vue.use(VueRouter)
@@ -65,8 +65,8 @@ const routes = [
         component: Orders
       },
       {
-        path: '/zjpay',
-        component: ZJPay
+        path: '/favorites',
+        component: Favorites
       },
       {
         path: '/personalinfo',

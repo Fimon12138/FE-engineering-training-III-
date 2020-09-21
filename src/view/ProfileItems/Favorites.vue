@@ -1,5 +1,5 @@
 <template>
   <div>
-    ZJPay
+    favorites
   </div>
 </template>

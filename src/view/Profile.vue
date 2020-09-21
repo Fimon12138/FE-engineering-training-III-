@@ -53,12 +53,12 @@ export default {
           }
         },
         {
-          label: 'My ZJ-Pay',
+          label: 'My Favorites',
           select: false,
           onClick: () => {
-            this.activeFunction = 'ZJ Pay'
-            this.handleActive('My ZJ-Pay')
-            this.$router.push('/zjpay')
+            this.activeFunction = 'Favorites'
+            this.handleActive('My Favorites')
+            this.$router.push('/favorites')
           }
         },
         {

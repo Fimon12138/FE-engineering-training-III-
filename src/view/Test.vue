@@ -69,7 +69,7 @@ import ActivityForMore from '../components/ActivityForMore'
 
 import logo from '../assets/img/vue-logo.png'
 import activityPic from '../assets/img/activity.png'
-import activityVertical from '../assets/img/activityVertical.jpg'
+// import activityVertical from '../assets/img/activityVertical.jpg'
 
 export default {
   data () {
