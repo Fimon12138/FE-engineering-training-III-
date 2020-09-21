@@ -6,7 +6,7 @@ export function client () {
     // endpoint:"oss-cn-hangzhou.aliyuncs.com",//访问域名
     accessKeyId: 'LTAI4G1te5TSnZasXy7cisio',
     accessKeySecret: 'eVc5Qg38xybe2fh95R6k4yhx15RNRw',
-    bucket: 'cloudmarkdown', // oss上你的存储空间名称
+    bucket: 'cloudmarkdown' // oss上你的存储空间名称
     // secure: true
   })
   return client
