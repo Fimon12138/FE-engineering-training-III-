@@ -11,7 +11,7 @@
         <img :src="initAvatarUrl" alt="error" slot="reference">
       </el-popconfirm>
     </div>
-    <div class="user-info">
+    <div class="user-info" v-if="edit">
       <el-form ref="formRef" :model="formData" :rules="rules">
         <el-form-item v-for="item in formSchema" :key="item.field"
           :label="item.label" :prop="item.field" label-position="top">
@@ -22,10 +22,22 @@
         </el-form-item>
       </el-form>
       <div class="buttons">
-        <el-button>Cancel</el-button>
-        <el-button>Submit</el-button>
+        <el-button @click="cancelEdit">Cancel</el-button>
+        <el-button @click="submitEdit">Submit</el-button>
       </div>
     </div>
+    <div v-else class="profile-view">
+      <span class="title">Name</span>
+      <span class="text">{{ formData.name }}</span>
+      <span class="title">Telephone</span>
+      <span class="text">{{ formData.phone }}</span>
+      <span class="title">Description</span>
+      <span class="text">{{ formData.desc }}</span>
+    </div>
+
+    <el-button class="edit-button"
+      icon="el-icon-s-tools"
+      @click="edit = true">Edit</el-button>
 
     <!-- 上传用户头像的对话框 -->
     <el-dialog :visible.sync="showDialog" title="Select Profile Photo">
@@ -60,6 +72,8 @@ export default {
       newAvatarUrl: '',
       avatarFileName: '',
       disableAvatarSubmit: true,
+
+      edit: false,
 
       formData: {
         name: '',
@@ -97,7 +111,9 @@ export default {
       this.showDialog = true
     },
     beforeAvatarUpload (item) {
-      const isIMAGE = item.type === 'image/jpeg' || 'image/jpg' || 'image/png'
+      const acceptTypes = ['image/jpeg', 'image/jpg', 'image/png']
+      const isIMAGE = acceptTypes.includes(item.type)
+      console.log(isIMAGE)
       return isIMAGE
     },
     uploadAvatar (item) {
@@ -125,10 +141,22 @@ export default {
     submitAvatar () {
       this.initAvatarUrl = this.newAvatarUrl
       this.cancelAvatar()
+    },
+
+    cancelEdit () {
+      this.$refs.formRef.resetFields()
+      console.log(this.formData)
+      this.edit = false
+    },
+    submitEdit () {
+      this.edit = false
     }
   },
   created () {
-    this.initAvatarUrl = 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/test.jpg'
+    this.initAvatarUrl = 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg'
+    this.formData.name = 'Yihang Lu'
+    this.formData.phone = '12345678911'
+    this.formData.desc = 'This is for test!'
   }
 }
 </script>
@@ -140,6 +168,8 @@ export default {
 
   padding: 50px 100px;
   width: 100%;
+
+  position: relative;
 }
 
 .user-avatar {
@@ -194,5 +224,29 @@ export default {
 .avatar-submit-button {
   margin-top: -20px;
   float: right;
+}
+
+.profile-view {
+  display: flex;
+  flex-direction: column;
+
+  padding: 30px 20px;
+
+  .title {
+    font-family: 'BalooTammudu-SemiBold';
+    font-size: 16px;
+  }
+
+  .text {
+    font-family: 'NotoSerifJP-SemiBold';
+    font-size: 18px;
+    padding: 5px 0 30px 10px;
+  }
+}
+
+.edit-button {
+  position: absolute;
+  top: 50px;
+  right: 20%;
 }
 </style>
