@@ -234,12 +234,13 @@ export default {
 
   .title {
     font-family: 'BalooTammudu-SemiBold';
-    font-size: 16px;
+    font-size: 19px;
   }
 
   .text {
+    color: #909090;
     font-family: 'NotoSerifJP-SemiBold';
-    font-size: 18px;
+    font-size: 14px;
     padding: 5px 0 30px 10px;
   }
 }

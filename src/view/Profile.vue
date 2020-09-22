@@ -62,6 +62,15 @@ export default {
           }
         },
         {
+          label: 'My Remarks',
+          select: false,
+          onClick: () => {
+            this.activeFunction = 'Remarks'
+            this.handleActive('My Remarks')
+            this.$router.push('/remarks')
+          }
+        },
+        {
           label: 'Personal Info',
           select: false,
           onClick: () => {
@@ -83,6 +92,7 @@ export default {
   },
   created () {
     this.activeFunction = 'Tickets'
+    this.$router.push('/tickets')
   }
 }
 </script>

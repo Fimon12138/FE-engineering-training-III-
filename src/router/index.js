@@ -14,6 +14,7 @@ import ActivityInfo from '../view/ActivityInfo'
 
 import Tickets from '../view/ProfileItems/Tickets'
 import Orders from '../view/ProfileItems/Orders'
+import Remarks from '../view/ProfileItems/Remarks'
 import Favorites from '../view/ProfileItems/Favorites'
 import PersonalInfo from '../view/ProfileItems/PersonalInfo'
 
@@ -63,6 +64,10 @@ const routes = [
       {
         path: '/orders',
         component: Orders
+      },
+      {
+        path: '/remarks',
+        component: Remarks
       },
       {
         path: '/favorites',

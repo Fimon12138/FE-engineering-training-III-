@@ -88,7 +88,8 @@
           <div v-if="playAnimation" ref="animationContainer" class="animation"></div>
           <img v-else :src="mall" alt="error" class="mall-img">
           <span>USD<span class="money">{{ orderParams[0].Total }}</span></span>
-          <el-button type="danger" class="third-pay" @click="pay">Pay</el-button>
+          <el-button type="danger" class="third-pay" @click="pay"
+            :disabled="disablePay">Pay</el-button>
         </div>
       </md-step>
       <md-step id="fourth" md-label="Get Your Tickets" :md-editable="false"></md-step>
@@ -128,7 +129,8 @@ export default {
       checked: true,
       showWarning: false,
       playAnimation: false,
-      animation: undefined
+      animation: undefined,
+      disablePay: false
     }
   },
   components: {
@@ -148,6 +150,7 @@ export default {
       })
     },
     pay () {
+      this.disablePay = true
       this.playAnimation = true
       this.$nextTick(() => {
         this.animation = Lottie.loadAnimation({

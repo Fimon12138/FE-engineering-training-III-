@@ -32,6 +32,7 @@ export default {
 .container-activity-more {
   height: 280px;
   width: 350px;
+  margin: 20px 50px;
 
   position: relative;
   background-color: white;
@@ -95,7 +96,7 @@ export default {
   height: 0;
 
   border-style: solid;
-  border-width: 280px 80px 0 130px;
+  border-width: 280px 81px 0 130px;
   border-color: transparent white transparent transparent;
 
   position: absolute;

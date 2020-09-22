@@ -46,18 +46,21 @@
     <el-divider></el-divider>
     <div class="footer">
       <span>A Work of ZhengJing Team</span>
-      <!-- <img src="" alt=""> -->
+      <img :src="teamLogo" alt="error">
     </div>
   </div>
 </template>
 
 <script>
+import teamLogo from '../assets/img/teamlogo.png'
+
 export default {
   data () {
     return {
       searchPattern: '',
       isLogin: true,
-      userName: ''
+      userName: '',
+      teamLogo
     }
   },
   methods: {
@@ -135,10 +138,17 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 
   span {
     font-family: 'Lineto-Brown-Bold';
-    font-size: 20px;
+    font-size: 15px;
+  }
+
+  img {
+    margin-left: 10px;
+
+    width: 50px;
   }
 }
 </style>

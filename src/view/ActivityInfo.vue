@@ -41,13 +41,23 @@
       <div class="bottom">
         <el-tabs v-model="activeName">
           <el-tab-pane label="Details" name="details">
-            {{ details }}
+            <img :src="details" alt="error" style="width: 100%">
           </el-tab-pane>
           <el-tab-pane label="Terms" name="terms">
             {{ terms }}
           </el-tab-pane>
           <el-tab-pane label="Remarks" name="remarks">
-            <div></div>
+            <div>
+              <RemarkEditor></RemarkEditor>
+              <div class="remarks">
+                <RemarkActivity
+                  v-for="(remark, index) in commentList" :key="index"
+                  :comment="remark"
+                  :index="index"
+                  class="remark"
+                ></RemarkActivity>
+              </div>
+            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -59,18 +69,20 @@
 </template>
 
 <script>
-import logo from '../assets/img/vue-logo.png'
 import add from '../assets/svg/add.svg'
 import remove from '../assets/svg/remove.svg'
 
 import TicketTerms from '../components/TicketTerms'
+import RemarkEditor from '../components/RemarkEditor'
+import RemarkActivity from '../components/RemarkActivity'
 
 export default {
   data () {
     return {
       add,
       remove,
-      logo,
+
+      logo: '',
       title: '',
       time: '',
       location: '',
@@ -78,6 +90,8 @@ export default {
       quantity: 1,
       quantity_temp: 1, // 为了防止输入非法字符，缓存上一次的正确输入
       left: 0,
+      commentList: [],
+
       totalPrice: 0,
       disableRemove: true,
       disableAdd: true,
@@ -87,7 +101,9 @@ export default {
     }
   },
   components: {
-    TicketTerms
+    TicketTerms,
+    RemarkEditor,
+    RemarkActivity
   },
   methods: {
     removeTicket () {
@@ -147,21 +163,47 @@ export default {
         '&Price=' + this.price +
         '&Quantity=' + this.quantity +
         '&Total=' + this.totalPrice +
-        '&Logo=' + logo
+        '&Logo=' + this.logo
       this.$router.push(requestUrl)
     }
   },
   created () {
-    this.title = 'Strawberry Music Festival - Wuhan Station(I)'
-    this.time = '2020-10-1 19:00 - 22:00'
-    this.location = 'Wuhan Center'
-    this.price = 30.10
-    this.price = this.price.toFixed(2)
-    this.left = 80
-    this.disableAdd = this.quantity === this.left
-    this.computeTotalPrice()
-    this.details = 'Test\n'.repeat(500)
-    this.terms = 'Test\n'.repeat(500)
+    this.$http.get('https://run.mocky.io/v3/0e0b47c6-6310-4b81-b6f1-ebf11968b751').then(res => {
+      this.title = res.data.ticketName
+      this.time = res.data.startTime
+      this.location = res.data.location
+      this.price = res.data.price
+      this.left = res.data.count
+
+      this.disableAdd = this.quantity === this.left
+      this.computeTotalPrice()
+
+      this.details = res.data.imageDetail
+      this.logo = res.data.imageColumn
+
+      this.terms = res.data.description
+      // this.commentList = res.data.commentList
+
+      this.commentList = [
+        {
+          avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
+          nickname: 'yihang lu',
+          commentText: 'Test '.repeat(20)
+        },
+        {
+          avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
+          nickname: 'yihang lu',
+          commentText: 'Test '.repeat(20)
+        },
+        {
+          avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
+          nickname: 'yihang lu',
+          commentText: 'Test '.repeat(20)
+        }
+      ]
+    }).catch(err => {
+      alert(err)
+    })
   }
 }
 </script>
@@ -183,6 +225,7 @@ export default {
     padding-left: 20px;
   }
 }
+
 .top {
   display: flex;
   img {
@@ -197,6 +240,7 @@ export default {
     .title {
       font-family: 'Lineto-Brown-Bold';
       font-size: 25px;
+      line-height: 26px;
     }
     .other-info {
       font-family: 'BalooTammudu-SemiBold';
@@ -271,6 +315,18 @@ export default {
   margin-top: 20px;
   font-family: 'Lineto-Brown-Bold';
   font-size: 15px;
+
+  .remarks {
+    margin-top: 30px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .remark {
+    margin-top: 20px;
+  }
 }
 
 </style>

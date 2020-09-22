@@ -54,6 +54,10 @@
       :activity="activity"
       style="margin-top: 30px"
     ></ActivityForMore>
+
+    <RemarkEditor
+      style="margin-top: 30px"
+    ></RemarkEditor>
   </div>
 </template>
 
@@ -66,6 +70,7 @@ import Order from '../components/Order'
 import RemarkActivity from '../components/RemarkActivity'
 import RemarkProfile from '../components/RemarkProfile'
 import ActivityForMore from '../components/ActivityForMore'
+import RemarkEditor from '../components/RemarkEditor'
 
 import logo from '../assets/img/vue-logo.png'
 import activityPic from '../assets/img/activity.png'
@@ -150,7 +155,8 @@ export default {
     Order,
     RemarkActivity,
     RemarkProfile,
-    ActivityForMore
+    ActivityForMore,
+    RemarkEditor
   },
   created () {
     this.$http.get('https://run.mocky.io/v3/0e0b47c6-6310-4b81-b6f1-ebf11968b751').then(res => {
