@@ -1,6 +1,6 @@
 <template>
   <div class="container-main-activity">
-    <img :src="imgUrl" alt="error" class="logo">
+    <img :src="imgUrl" alt="error" class="logo" @click="detail">
 
     <div class="info">
       <div class="heart" ref="heart" @click="like"></div>
@@ -17,6 +17,10 @@ import likeAnimationData from '../assets/lottie_json/like_white.json'
 
 export default {
   props: {
+    id: {
+      type: String,
+      required: true
+    },
     imgUrl: {
       type: String,
       required: true
@@ -47,15 +51,42 @@ export default {
   methods: {
     like () {
       if (this.isLike) {
-        this.animation.playSegments([9, 0], true)
-        // TODO
+        // 取消收藏
+        this.$http.post('/api/v1/favorite/delete', {
+          userId: window.sessionStorage.getItem('token'),
+          ticketId: this.id
+        }).then(res => {
+          if (res.status === 200) {
+            this.animation.playSegments([9, 0], true)
+            this.isLike = false
+            this.$emit('update')
+          }
+        }).catch(err => {
+          console.log(err)
+          alert('Error!')
+        })
       } else {
-        this.animation.playSegments([0, 9], true)
-        // TODO
+        // 添加收藏
+        this.$http.post('/api/v1/favorite', {
+          userId: window.sessionStorage.getItem('token'),
+          ticketId: this.id
+        }).then(res => {
+          if (res.status === 200) {
+            this.animation.playSegments([0, 9], true)
+            this.isLike = true
+            this.$emit('update')
+          } else {
+            console.log(res)
+          }
+        }).catch(err => {
+          console.log(err)
+          alert('Error!')
+        })
       }
-      this.isLike = !this.isLike
-      // console.log(this.isLike)
-      // TODO
+    },
+    detail () {
+      const reqUrl = '/activityInfo?id=' + this.id
+      this.$router.push(reqUrl)
     }
   },
   mounted () {

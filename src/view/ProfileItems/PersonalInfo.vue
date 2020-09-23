@@ -151,13 +151,16 @@ export default {
       this.showDialog = false
     },
     submitAvatar () {
-      this.$http.put('user', {
+      this.$http.post('/api/v1/user/update', {
         avatar: this.newAvatarUrl,
-        telephone: this.formData.phone
+        id: window.sessionStorage.getItem('token')
       }).then(res => {
         if (res.status === 200) {
           this.initAvatarUrl = this.newAvatarUrl
           this.cancelAvatar()
+          location.reload()
+        } else {
+          console.log(res)
         }
       }).catch(err => {
         alert('Error!')
@@ -169,9 +172,27 @@ export default {
       this.$refs.formRef.resetFields()
       console.log(this.formData)
       this.edit = false
+      this.loadAnima()
     },
     submitEdit () {
-      this.edit = false
+      this.$http.post('/api/v1/user/update', {
+        id: window.sessionStorage.getItem('token'),
+        nickname: this.formData.name,
+        telephone: this.formData.phone,
+        description: this.formData.desc
+      }).then(res => {
+        if (res.status === 200) {
+          window.sessionStorage.setItem('name', this.formData.name)
+          location.reload()
+          this.edit = false
+          this.loadAnima()
+        } else {
+          console.log(res)
+        }
+      }).catch(err => {
+        console.log(err)
+        alert('Error!')
+      })
     },
     changeBalanceStatus () {
       if (this.showBalance) {
@@ -189,7 +210,7 @@ export default {
               id: res.data.payId
             }).then(res => {
               if (res.status === 200) {
-                this.balance = res.data.Money
+                this.balance = 'USD ' + res.data.Money
               }
             })
           }
@@ -198,6 +219,19 @@ export default {
           alert('Error!')
         })
       }
+    },
+    loadAnima () {
+      this.$nextTick(() => {
+        this.showBalance = false
+        this.animation = Lottie.loadAnimation({
+          container: this.$refs.animationContainer,
+          renderer: 'svg',
+          loop: false,
+          autoplay: false,
+          animationData: visibilityJSON
+        })
+        this.animation.goToAndStop(24, true)
+      })
     }
   },
   created () {
@@ -213,17 +247,7 @@ export default {
     })
   },
   mounted () {
-    this.$nextTick(() => {
-      this.animation = Lottie.loadAnimation({
-        container: this.$refs.animationContainer,
-        renderer: 'svg',
-        loop: false,
-        autoplay: false,
-        animationData: visibilityJSON
-      })
-      // this.animation.playSegments([0, 25], true)
-      this.animation.goToAndStop(24, true)
-    })
+    this.loadAnima()
   }
 }
 </script>

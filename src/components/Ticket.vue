@@ -1,5 +1,5 @@
 <template>
-  <div class="container-ticket">
+  <div class="container-ticket" @click="linkTo">
     <img :src="logo" alt="error" class="logo">
     <div class="info">
       <p class="name">{{ name }}</p>
@@ -24,6 +24,10 @@ import dateIcon from '../assets/svg/date.svg'
 
 export default {
   props: {
+    id: {
+      required: true,
+      type: String
+    },
     logo: {
       required: true,
       type: String
@@ -39,6 +43,12 @@ export default {
     return {
       locationIcon,
       dateIcon
+    }
+  },
+  methods: {
+    linkTo () {
+      const reqUrl = '/activityInfo?id=' + this.id
+      this.$router.push(reqUrl)
     }
   }
 }

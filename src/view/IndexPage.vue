@@ -2,12 +2,14 @@
   <div class="container-index-page">
     <CarouselWithArrow
       :itemList="recommendations"
+      :idList="idList"
       class="carousel"
     ></CarouselWithArrow>
     <div class="activities-area">
       <ActivityCategory
         v-for="(category, index) in categories" :key="index"
         :category="category.title"
+        :type="category.type"
         :main="category.main"
         :sub="category.sub"
       ></ActivityCategory>
@@ -23,6 +25,7 @@ export default {
   data () {
     return {
       recommendations: [],
+      idList: [],
       categories: []
     }
   },
@@ -36,14 +39,11 @@ export default {
       console.log(res)
 
       const activities = res.data.ticket_ids
-      // console.log(activities)
 
       activities.forEach(element => {
-        // console.log(element)
         this.recommendations.push(element.imageRow)
+        this.idList.push(element.id)
       })
-
-      // console.log(this.recommendations)
     }).catch(err => {
       console.log(err)
     })
@@ -71,29 +71,35 @@ export default {
       this.$http.post('/api/v1/ticket/list', {
         pageNo: 1,
         pageSize: 7,
-        type: element.type
+        type: element.type,
+        userId: window.sessionStorage.getItem('token')
       }).then(res => {
         if (res.status === 200 && res.data.totalCount > 0) {
           const activities = res.data.result
           const mainActivity = {
+            id: activities[0].id,
             imgUrl: activities[0].imageColumn,
             name: activities[0].name,
             location: activities[0].location,
-            date: activities[0].startTime
+            date: activities[0].startTime,
+            star: activities[0].isSubscribed === 'yes'
           }
           const subActivities = []
           for (let i = 1; i < res.data.totalCount; i++) {
             const activity = {
+              id: activities[i].id,
               logo: activities[i].imageColumn,
               name: activities[i].name,
               location: activities[i].location,
-              date: activities[i].startTime
+              date: activities[i].startTime,
+              star: activities[i].isSubscribed === 'yes'
             }
             subActivities.push(activity)
           }
 
           const category = {
             title: element.label,
+            type: element.type,
             main: mainActivity,
             sub: subActivities
           }

@@ -4,8 +4,8 @@
       @click="prePage">
       <md-icon :md-src="leftArrow"></md-icon>
     </md-button>
-    <el-carousel id="carousel" :interval="5000" arrow="never" :height="bannerHeight + 'px'" ref="carousel">
-      <el-carousel-item v-for="item in itemList" :key="item">
+    <el-carousel id="carousel" :interval="5000" arrow="never" :height="bannerHeight + 'px'" ref="carousel"  @click.native="linkTo">
+      <el-carousel-item v-for="(item, index) in itemList" :key="index" @click="detail(index)">
         <img :src="item" alt="loading fail" class="image">
       </el-carousel-item>
     </el-carousel>
@@ -23,6 +23,10 @@ import rightArrow from '../assets/svg/arrow_right.svg'
 export default {
   props: {
     itemList: {
+      type: Array,
+      required: true
+    },
+    idList: {
       type: Array,
       required: true
     },
@@ -51,6 +55,12 @@ export default {
     },
     nextPage () {
       this.$refs.carousel.next()
+    },
+    linkTo () {
+      const activeIndex = this.$refs.carousel.activeIndex
+      console.log(activeIndex)
+      const reqUrl = '/activityInfo?id=' + this.idList[activeIndex]
+      this.$router.push(reqUrl)
     }
   },
   mounted () {

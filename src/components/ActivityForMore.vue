@@ -1,5 +1,5 @@
 <template>
-  <div class="container-activity-more">
+  <div class="container-activity-more" @click="linkTo">
     <img :src="activity.logo" alt="error" class="logo">
     <div class="activity-info">
       <div class="bottom">
@@ -20,6 +20,12 @@ export default {
     activity: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    linkTo () {
+      const reqUrl = '/activityInfo?id=' + this.activity.id
+      this.$router.push(reqUrl)
     }
   },
   created () {

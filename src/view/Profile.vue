@@ -1,11 +1,11 @@
 <template>
   <el-container>
     <el-header height="100px">
-      <img src="../assets/img/logo-profile.png" alt="loading failed" style="width: 100px">
+      <img src="../assets/img/logo-profile.png" alt="loading failed" style="width: 100px" @click="backToHome">
     </el-header>
     <el-container>
       <el-aside width="200px">
-        <img :src="pic" alt="error">
+        <img :src="avatar" alt="error">
         <span class="user-name">{{ userName }}</span>
         <el-divider></el-divider>
         <ul>
@@ -26,13 +26,11 @@
 </template>
 
 <script>
-import pic from '../assets/img/vue-logo.png'
-
 export default {
   data () {
     return {
-      userName: window.sessionStorage.getItem('name') || 'Yihang LU',
-      pic,
+      userName: window.sessionStorage.getItem('name') || 'hello world',
+      avatar: '',
       listItems: [
         {
           label: 'My Tickets',
@@ -88,11 +86,27 @@ export default {
       for (const item of this.listItems) {
         item.select = selectItem === item.label
       }
+    },
+    backToHome () {
+      this.$router.push('/home')
     }
   },
   created () {
     this.activeFunction = 'Tickets'
     this.$router.push('/tickets')
+
+    this.$http.post('/api/v1/user/info', {
+      id: window.sessionStorage.getItem('token')
+    }).then(res => {
+      if (res.status === 200) {
+        this.avatar = res.data.avatar
+      } else {
+        console.log(res)
+      }
+    }).catch(err => {
+      console.log(err)
+      alert('Error!')
+    })
   }
 }
 </script>

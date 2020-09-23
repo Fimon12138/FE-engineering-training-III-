@@ -20,21 +20,30 @@ export default {
     ActivityForMore
   },
   created () {
-    this.$http.get('https://run.mocky.io/v3/0e0b47c6-6310-4b81-b6f1-ebf11968b751').then(res => {
-      const activity = {
-        logo: res.data.imageColumn,
-        name: res.data.ticketName,
-        location: res.data.location,
-        date: res.data.startTime
-      }
+    const type = this.$route.query.type
+    this.$http.post('/api/v1/ticket/list', {
+      pageNo: 1,
+      pageSize: 100,
+      type: type
+    }).then(res => {
+      if (res.status === 200 && res.data.totalCount > 0) {
+        res.data.result.forEach(element => {
+          const activity = {
+            logo: element.imageColumn,
+            date: element.startTime,
+            name: element.name,
+            location: element.location,
+            id: element.id
+          }
 
-      // console.log(this.activity)
-
-      for (let i = 0; i < 5; i++) {
-        this.activityList.push(activity)
+          this.activityList.push(activity)
+        })
+      } else {
+        console.log(res)
       }
     }).catch(err => {
       console.log(err)
+      alert('Error!')
     })
   }
 }

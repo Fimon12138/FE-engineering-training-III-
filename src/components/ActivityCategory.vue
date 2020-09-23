@@ -2,7 +2,7 @@
   <div class="container-activity-category">
     <div class="tab">
       <span class="title">{{ category }}</span>
-      <div>
+      <div @click="linkTo" style="cursor:pointer">
         <span>more</span>
         <img :src="rightArrow" alt="error" class="rightArrow">
       </div>
@@ -10,6 +10,7 @@
     <div class="activities">
       <div class="main-activity">
         <MainActivity
+          :id="main.id"
           :imgUrl="main.imgUrl"
           :date="main.date"
           :name="main.name"
@@ -20,6 +21,7 @@
       <div class="sub-activities">
         <Activity
           v-for="(activity, index) in sub" :key="index"
+          :id="activity.id"
           :logo="activity.logo"
           :name="activity.name"
           :location="activity.location"
@@ -43,6 +45,10 @@ export default {
       type: String,
       required: true
     },
+    type: {
+      type: String,
+      required: true
+    },
     main: {
       type: Object,
       required: true
@@ -60,6 +66,12 @@ export default {
   components: {
     Activity,
     MainActivity
+  },
+  methods: {
+    linkTo () {
+      const reqUrl = '/allactivities?type=' + this.type
+      this.$router.push(reqUrl)
+    }
   }
 }
 </script>

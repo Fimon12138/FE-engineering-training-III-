@@ -9,6 +9,7 @@
     <div class="main">
       <Ticket
         v-for="(ticket, index) in ticketList" :key="index"
+        :id="ticket.id"
         :logo="ticket.logo"
         :name="ticket.name"
         :location="ticket.location"
@@ -40,6 +41,7 @@ export default {
         if (res.status === 200 && res.data.result) {
           res.data.result.forEach(element => {
             const ticket = {
+              id: element.id,
               logo: element.imageColumn,
               name: element.name,
               location: element.location,

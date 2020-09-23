@@ -4,12 +4,14 @@
       <div class="triangle-mask"></div>
       <div ref="heart" class="heart" @click="like"></div>
     </div>
-    <img :src="logo" alt="error" class="logo">
-    <div class="info">
-      <p class="date">{{ date }}</p>
-      <p class="name">{{ name }}</p>
-      <div class="divider"></div>
-      <p class="location bottom">{{ location }}</p>
+    <div class="info-area" @click="detail">
+      <img :src="logo" alt="error" class="logo">
+      <div class="info">
+        <p class="date">{{ date }}</p>
+        <p class="name">{{ name }}</p>
+        <div class="divider"></div>
+        <p class="location bottom">{{ location }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -20,6 +22,10 @@ import likeAnimationData from '../assets/lottie_json/like_white.json'
 
 export default {
   props: {
+    id: {
+      type: String,
+      required: true
+    },
     logo: {
       required: true,
       type: String
@@ -44,15 +50,42 @@ export default {
   methods: {
     like () {
       if (this.isLike) {
-        this.animation.playSegments([9, 0], true)
-        // TODO
+        // 取消收藏
+        this.$http.post('/api/v1/favorite/delete', {
+          userId: window.sessionStorage.getItem('token'),
+          ticketId: this.id
+        }).then(res => {
+          if (res.status === 200) {
+            this.animation.playSegments([9, 0], true)
+            this.isLike = false
+            this.$emit('update')
+          }
+        }).catch(err => {
+          console.log(err)
+          alert('Error!')
+        })
       } else {
-        this.animation.playSegments([0, 9], true)
-        // TODO
+        // 添加收藏
+        this.$http.post('/api/v1/favorite', {
+          userId: window.sessionStorage.getItem('token'),
+          ticketId: this.id
+        }).then(res => {
+          if (res.status === 200) {
+            this.animation.playSegments([0, 9], true)
+            this.isLike = true
+            this.$emit('update')
+          } else {
+            console.log(res)
+          }
+        }).catch(err => {
+          console.log(err)
+          alert('Error!')
+        })
       }
-      this.isLike = !this.isLike
-      // console.log(this.isLike)
-      // TODO
+    },
+    detail () {
+      const reqUrl = '/activityInfo?id=' + this.id
+      this.$router.push(reqUrl)
     }
   },
   mounted () {
@@ -78,11 +111,15 @@ export default {
   padding: 10px 20px;
   width: 335px;
   border-radius: 10px;
-  display: flex;
-  flex-direction: row;
   position: relative;
   overflow: hidden;
 }
+
+.info-area {
+  display: flex;
+  flex-direction: row;
+}
+
 .logo {
   width: 75px;
   height: 100px;
