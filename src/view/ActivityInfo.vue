@@ -50,6 +50,7 @@
             <div>
               <RemarkEditor
                 :ticketId="activityId"
+                @newRemark="getNewComment"
               ></RemarkEditor>
               <div class="remarks">
                 <RemarkActivity
@@ -166,6 +167,9 @@ export default {
         'ActivityId=' + this.activityId +
         '&Quantity=' + this.quantity
       this.$router.push(requestUrl)
+    },
+    getNewComment (comment) {
+      this.commentList.unshift(comment)
     }
   },
   created () {
@@ -176,7 +180,7 @@ export default {
     this.$http.post('/api/v1/ticket/info', {
       id: this.activityId
     }).then(res => {
-      console.log(res)
+      // console.log(res)
 
       if (res.status === 200 && res.data) {
         const data = res.data
@@ -200,35 +204,36 @@ export default {
       alert('Get Activity Info Fail!')
     })
 
-    //   this.terms = res.data.description
-    //   // this.commentList = res.data.commentList
     this.$http.post('/api/v1/comment/list', {
       pageNo: 1,
       pageSize: 100,
       ticketId: this.activityId
-    })
-    // TODO
+    }).then(res => {
+      if (res.status === 200 && res.data.totalCount > 0) {
+        const comments = res.data.result
+        comments.forEach(element => {
+          const comment = {}
+          comment.commentText = element.content
+          // this.commentList.push(comment)
 
-    //   this.commentList = [
-    //     {
-    //       avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
-    //       nickname: 'yihang lu',
-    //       commentText: 'Test '.repeat(20)
-    //     },
-    //     {
-    //       avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
-    //       nickname: 'yihang lu',
-    //       commentText: 'Test '.repeat(20)
-    //     },
-    //     {
-    //       avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
-    //       nickname: 'yihang lu',
-    //       commentText: 'Test '.repeat(20)
-    //     }
-    //   ]
-    // }).catch(err => {
-    //   alert(err)
-    // })
+          this.$http.post('/api/v1/user/info', {
+            id: element.userId
+          }).then(res => {
+            if (res.status !== 200) {
+              return
+            }
+            comment.nickname = res.data.nickname
+            comment.avatar = res.data.avatar
+
+            this.commentList.push(comment)
+          }).catch(err => {
+            console.log(err)
+          })
+        })
+      }
+    }).catch(err => {
+      console.log(err)
+    })
   }
 }
 </script>

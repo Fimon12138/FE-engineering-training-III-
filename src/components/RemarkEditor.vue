@@ -63,12 +63,27 @@ export default {
             console.log(res)
 
             if (res.status === 200 && res.data) {
-              this.formData.remark = ''
+              const comment = {
+                commentText: this.formData.remark
+              }
+              this.$http.post('/api/v1/user/info', {
+                id: window.sessionStorage.getItem('token')
+              }).then(res => {
+                if (res.status !== 200) {
+                  return
+                }
+                comment.nickname = res.data.nickname
+                comment.avatar = res.data.avatar
 
-              this.showSuccess = true
-              setTimeout(() => {
-                this.showSuccess = false
-              }, 1000)
+                this.$emit('newRemark', comment)
+
+                this.formData.remark = ''
+
+                this.showSuccess = true
+                setTimeout(() => {
+                  this.showSuccess = false
+                }, 1000)
+              })
             } else {
               alert('Post Comment Fail!')
             }
