@@ -159,17 +159,27 @@ export default {
     RemarkEditor
   },
   created () {
-    this.$http.get('https://run.mocky.io/v3/0e0b47c6-6310-4b81-b6f1-ebf11968b751').then(res => {
+    // this.$http.get('https://run.mocky.io/v3/0e0b47c6-6310-4b81-b6f1-ebf11968b751').then(res => {
+    //   console.log(res)
+    //   console.log(res.data)
+    //   console.log(typeof res.data)
+
+    //   this.$set(this.activity, 'logo', res.data.imageColumn)
+    //   this.$set(this.activity, 'name', res.data.ticketName)
+    //   this.$set(this.activity, 'location', res.data.location)
+    //   this.$set(this.activity, 'date', res.data.startTime)
+
+    //   console.log(this.activity)
+    // }).catch(err => {
+    //   console.log(err)
+    // })
+    const params = {
+      nickname: 'test',
+      telephone: '17607100643'
+    }
+
+    this.$http.post('http://175.24.31.76:8888/v1/user', params).then(res => {
       console.log(res)
-      console.log(res.data)
-      console.log(typeof res.data)
-
-      this.$set(this.activity, 'logo', res.data.imageColumn)
-      this.$set(this.activity, 'name', res.data.ticketName)
-      this.$set(this.activity, 'location', res.data.location)
-      this.$set(this.activity, 'date', res.data.startTime)
-
-      console.log(this.activity)
     }).catch(err => {
       console.log(err)
     })
