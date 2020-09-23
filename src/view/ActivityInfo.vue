@@ -44,11 +44,13 @@
             <img :src="details" alt="error" style="width: 100%">
           </el-tab-pane>
           <el-tab-pane label="Terms" name="terms">
-            {{ terms }}
+            <p>{{ terms }}</p>
           </el-tab-pane>
           <el-tab-pane label="Remarks" name="remarks">
             <div>
-              <RemarkEditor></RemarkEditor>
+              <RemarkEditor
+                :ticketId="activityId"
+              ></RemarkEditor>
               <div class="remarks">
                 <RemarkActivity
                   v-for="(remark, index) in commentList" :key="index"
@@ -82,6 +84,7 @@ export default {
       add,
       remove,
 
+      activityId: '',
       logo: '',
       title: '',
       time: '',
@@ -97,7 +100,10 @@ export default {
       disableAdd: true,
       activeName: 'details',
       details: '',
-      terms: ''
+      terms: '  For abnormal ordering behavior, TicketHub.com reserves the right to cancel the corresponding order after the order is established or becomes effective.' +
+        'Abnormal ordering behaviors include but are not limited to the following situations:' +
+        '(1) Orders that exceed the limited number of orders through the same ID.' +
+        '(2) The behavior of placing orders that are deemed to be non-real consumers after reasonable judgment, including but not limited to passing the same batch or fictitious payment account, receiving address (including the filling in when placing the order and the final actual receiving address), recipient, Phone number ordering orders exceeding the limit'
     }
   },
   components: {
@@ -157,53 +163,72 @@ export default {
     },
     buy () {
       const requestUrl = '/confirmOrder?' +
-        'Activity=' + this.title +
-        '&Time=' + this.time +
-        '&Location=' + this.location +
-        '&Price=' + this.price +
-        '&Quantity=' + this.quantity +
-        '&Total=' + this.totalPrice +
-        '&Logo=' + this.logo
+        'ActivityId=' + this.activityId +
+        '&Quantity=' + this.quantity
       this.$router.push(requestUrl)
     }
   },
   created () {
-    this.$http.get('https://run.mocky.io/v3/0e0b47c6-6310-4b81-b6f1-ebf11968b751').then(res => {
-      this.title = res.data.ticketName
-      this.time = res.data.startTime
-      this.location = res.data.location
-      this.price = res.data.price
-      this.left = res.data.count
+    this.activityId = this.$route.query.id
 
-      this.disableAdd = this.quantity === this.left
-      this.computeTotalPrice()
+    console.log(this.activityId)
 
-      this.details = res.data.imageDetail
-      this.logo = res.data.imageColumn
+    this.$http.post('/api/v1/ticket/info', {
+      id: this.activityId
+    }).then(res => {
+      console.log(res)
 
-      this.terms = res.data.description
-      // this.commentList = res.data.commentList
+      if (res.status === 200 && res.data) {
+        const data = res.data
+        this.title = data.name
+        this.time = data.startTime
+        this.location = data.location
+        this.price = data.price
+        this.left = data.count
 
-      this.commentList = [
-        {
-          avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
-          nickname: 'yihang lu',
-          commentText: 'Test '.repeat(20)
-        },
-        {
-          avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
-          nickname: 'yihang lu',
-          commentText: 'Test '.repeat(20)
-        },
-        {
-          avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
-          nickname: 'yihang lu',
-          commentText: 'Test '.repeat(20)
-        }
-      ]
+        this.disableAdd = this.quantity === this.left
+        this.computeTotalPrice()
+
+        this.details = data.imageDetail
+        this.logo = data.imageColumn
+        // this.terms = data.
+      } else {
+        alert('Get Activity Info Fail!')
+      }
     }).catch(err => {
-      alert(err)
+      console.log(err)
+      alert('Get Activity Info Fail!')
     })
+
+    //   this.terms = res.data.description
+    //   // this.commentList = res.data.commentList
+    this.$http.post('/api/v1/comment/list', {
+      pageNo: 1,
+      pageSize: 100,
+      ticketId: this.activityId
+    })
+    // TODO
+
+    //   this.commentList = [
+    //     {
+    //       avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
+    //       nickname: 'yihang lu',
+    //       commentText: 'Test '.repeat(20)
+    //     },
+    //     {
+    //       avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
+    //       nickname: 'yihang lu',
+    //       commentText: 'Test '.repeat(20)
+    //     },
+    //     {
+    //       avatar: 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg',
+    //       nickname: 'yihang lu',
+    //       commentText: 'Test '.repeat(20)
+    //     }
+    //   ]
+    // }).catch(err => {
+    //   alert(err)
+    // })
   }
 }
 </script>

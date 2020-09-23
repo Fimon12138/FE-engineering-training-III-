@@ -174,7 +174,7 @@ export default {
     //   console.log(err)
     // })
     const params = {
-      nickname: 'test',
+      nickname: 'test1',
       telephone: '17607100643'
     }
 

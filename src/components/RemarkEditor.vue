@@ -20,6 +20,12 @@
 
 <script>
 export default {
+  props: {
+    ticketId: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
       formData: {
@@ -49,12 +55,27 @@ export default {
       this.$refs.formRef.validate(valid => {
         if (valid) {
           console.log(this.formData.remark)
-          this.formData.remark = ''
+          this.$http.post('/api/v1/comment', {
+            userId: window.sessionStorage.getItem('token'),
+            ticketId: this.ticketId,
+            content: this.formData.remark
+          }).then(res => {
+            console.log(res)
 
-          this.showSuccess = true
-          setTimeout(() => {
-            this.showSuccess = false
-          }, 1000)
+            if (res.status === 200 && res.data) {
+              this.formData.remark = ''
+
+              this.showSuccess = true
+              setTimeout(() => {
+                this.showSuccess = false
+              }, 1000)
+            } else {
+              alert('Post Comment Fail!')
+            }
+          }).catch(err => {
+            console.log(err)
+            alert('Post Comment Fail!')
+          })
         }
       })
     },

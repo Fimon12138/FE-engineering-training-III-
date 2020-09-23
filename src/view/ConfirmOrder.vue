@@ -92,7 +92,14 @@
             :disabled="disablePay">Pay</el-button>
         </div>
       </md-step>
-      <md-step id="fourth" md-label="Get Your Tickets" :md-editable="false"></md-step>
+      <md-step id="fourth" md-label="Get Your Tickets" :md-editable="false" class="fourthStep">
+        <div class="fourthStep">
+          <span>You have booked the tickets successfully!</span>
+          <div style="text-align: center">
+            <el-button type="success" @click="tohome">Back To Home</el-button>
+          </div>
+        </div>
+      </md-step>
     </md-steppers>
   </div>
 </template>
@@ -126,6 +133,7 @@ export default {
       contactRules: {},
 
       orderParams: [],
+      orderId: '',
       checked: true,
       showWarning: false,
       playAnimation: false,
@@ -145,24 +153,90 @@ export default {
 
       this.$refs.contactForm.validate(valid => {
         if (valid) {
-          this.activeStep = 'third'
+          const params = {
+            ticketId: this.orderParams[0].ActivityId,
+            userId: window.sessionStorage.getItem('token'),
+            count: Number(this.orderParams[0].Quantity),
+            price: this.orderParams[0].Total
+          }
+          console.log(params)
+
+          this.$http.post('/api/v1/order', params).then(res => {
+            console.log(res)
+
+            if (res.status === 200) {
+              this.orderId = res.data.id
+              this.activeStep = 'third'
+            } else {
+              alert('Error!')
+            }
+          }).catch(err => {
+            console.log(err)
+            alert('Error!')
+          })
         }
       })
     },
     pay () {
-      this.disablePay = true
-      this.playAnimation = true
-      this.$nextTick(() => {
-        this.animation = Lottie.loadAnimation({
-          container: this.$refs.animationContainer,
-          renderer: 'svg',
-          loop: false,
-          autoplay: true,
-          path: jsonPath
+      this.$http.post('/api/v1/user/info', {
+        id: window.sessionStorage.getItem('token')
+      }).then(res => {
+        console.log(res)
+
+        let payId
+        if (res.status === 200 && res.data.payId) {
+          payId = res.data.payId
+        } else {
+          alert('Error!')
+          return
+        }
+
+        // 查余额
+        this.$http.post('/api/v1/zjpay/info', {
+          id: payId
+        }).then(res => {
+          console.log(res)
+
+          if (res.status !== 200) {
+            alert('Error!')
+            return
+          } else if (res.data.Money < this.orderParams[0].Total) {
+            alert('Insufficient balance!')
+            return
+          }
+
+          // 付款
+          const params = {
+            zjpayId: payId,
+            orderId: this.orderId
+          }
+          console.log(params)
+
+          this.$http.post('/api/v1/order/pay', params).then(res => {
+            console.log(res)
+            if (res.status !== 200) {
+              return
+            }
+
+            this.disablePay = true
+            this.playAnimation = true
+            this.$nextTick(() => {
+              this.animation = Lottie.loadAnimation({
+                container: this.$refs.animationContainer,
+                renderer: 'svg',
+                loop: false,
+                autoplay: true,
+                path: jsonPath
+              })
+              this.animation.addEventListener('complete', () => {
+                setTimeout(this.gotoStepFour(), 1000)
+              })
+            })
+          })
         })
-        this.animation.addEventListener('complete', () => {
-          setTimeout(this.gotoStepFour(), 1000)
-        })
+      }).catch(err => {
+        console.log(err)
+        alert('Error!')
       })
     },
     setWarningStatus () {
@@ -182,12 +256,36 @@ export default {
     },
     clickStepThird () {
       console.log('third')
+    },
+    tohome () {
+      this.$router.push('/home')
     }
   },
   created () {
     const params = this.$route.query
-    this.orderParams = [params]
-    console.log(this.orderParams)
+    console.log(params)
+
+    this.$http.post('/api/v1/ticket/info', {
+      id: params.ActivityId
+    }).then(res => {
+      console.log(res)
+
+      const order = {
+        Logo: res.data.imageColumn,
+        Activity: res.data.name,
+        Location: res.data.location,
+        Time: res.data.startTime,
+        Price: res.data.price,
+        Quantity: params.Quantity,
+        Total: res.data.price * params.Quantity,
+        ActivityId: params.ActivityId
+      }
+
+      this.orderParams.push(order)
+    }).catch(err => {
+      console.log(err)
+      alert('Error!')
+    })
   }
 }
 </script>
@@ -370,6 +468,25 @@ export default {
   .third-pay {
     margin-top: 20px;
     width: 200px;
+  }
+}
+
+.fourthStep {
+  display: flex;
+  flex-direction: column;
+
+  span {
+    text-align: center;
+
+    font-family: 'Lineto-Brown-Bold';
+    font-size: 25px;
+
+    margin-top: 30px;
+  }
+
+  .el-button {
+    width: 200px;
+    margin-top: 30px;
   }
 }
 </style>

@@ -6,7 +6,7 @@
     </md-button>
     <el-carousel id="carousel" :interval="5000" arrow="never" :height="bannerHeight + 'px'" ref="carousel">
       <el-carousel-item v-for="item in itemList" :key="item">
-        <img :src="item" alt="loading fail">
+        <img :src="item" alt="loading fail" class="image">
       </el-carousel-item>
     </el-carousel>
     <md-button class="md-icon-button md-raised right vertical"
@@ -80,5 +80,10 @@ export default {
 }
 .right {
   right: -25px;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
 }
 </style>

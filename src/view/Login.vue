@@ -126,19 +126,23 @@ export default {
           this.animation.play()
 
           const params = {
-            username: this.formData.name,
+            name: this.formData.name,
             password: sha512(this.formData.password)
           }
           console.log(params)
-          this.$http.post('/login', params).then(res => {
+          this.$http.post('/api/v1/account/login', params).then(res => {
             console.log(res)
 
-            window.sessionStorage.setItem('name', this.formData.name)
-            window.sessionStorage.setItem('token', res.userId)
-            this.$router.push('/home')
+            if (res.status === 200 && res.data.id) {
+              window.sessionStorage.setItem('name', this.formData.name)
+              window.sessionStorage.setItem('token', res.data.id)
+              this.$router.push('/home')
+            } else {
+              alert('Login Fail!')
+            }
           }).catch(err => {
             console.log(err)
-            alert(err)
+            alert('Login Fail!')
 
             this.animation.play()
             this.showLoading = false

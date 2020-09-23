@@ -51,20 +51,20 @@ export default {
       animation: undefined,
       animationSuccess: undefined,
       formData: {
-        email: '',
+        phone: '',
         name: '',
         password: '',
         confirm: ''
       },
       formSchema: [
         {
-          label: 'Email Address',
+          label: 'Telephone',
           disable: true,
           data: {
-            field: 'email',
+            field: 'phone',
             type: 'input',
             attrs: {
-              placeholder: 'Email'
+              placeholder: 'Telephone'
             }
           }
         },
@@ -109,16 +109,16 @@ export default {
         }
       ],
       rules: {
-        email: [
+        phone: [
           {
             validator: (rules, value, callback) => {
-              const child = this.$refs.email[0]
+              const child = this.$refs.phone[0]
               if (value === '') {
                 child.updateOk(false)
                 return callback(new Error('This field is required!'))
               }
-              const emailReg = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/
-              if (!emailReg.test(value)) {
+              const phoneReg = /^1[3579][456789]\d{8}$/
+              if (!phoneReg.test(value)) {
                 child.updateOk(false)
                 return callback(new Error('Format error!'))
               }
@@ -223,20 +223,24 @@ export default {
           this.animation.play()
 
           const params = {
-            email: this.formData.email,
-            username: this.formData.name,
+            telephone: this.formData.phone,
+            name: this.formData.name,
             password: sha512(this.formData.password),
             type: 'user'
           }
           console.log(params)
-          this.$http.post('/signup', params).then(res => {
+          this.$http.post('/api/v1/account/signup', params).then(res => {
             console.log(res)
 
-            this.isSuccess = true
-            this.animationSuccess.play()
+            if (res.status === 200) {
+              this.isSuccess = true
+              this.animationSuccess.play()
+            } else {
+              alert('Login Fail!')
+            }
           }).catch(err => {
-            // console.log(err)
-            alert(err)
+            console.log(err)
+            alert('Login Fail!')
 
             this.animation.stop()
             this.showLoading = false

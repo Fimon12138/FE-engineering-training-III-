@@ -10,12 +10,6 @@ import './assets/fonts/index.less'
 Vue.config.productionTip = false
 
 // TODO
-// axios.defaults.baseURL = 'http://'
-// axios.interceptors.request.use(config => {
-//   console.log(config)
-//   config.headers.Authorization = window.sessionStorage.getItem('token')
-//   return config
-// })
 Vue.prototype.$http = axios
 
 new Vue({

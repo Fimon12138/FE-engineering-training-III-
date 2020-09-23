@@ -70,6 +70,9 @@ export default {
   padding: 10px 20px;
   box-shadow: 0 0 5px #dddddd;
   border-radius: 6px;
+
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 .tab {
   display: flex;
