@@ -63,7 +63,8 @@ export default {
       this.updateTicketList({
         pageNo: 1,
         pageSize: 100,
-        outOfDate: 'yes'
+        outOfDate: 'yes',
+        userId: window.sessionStorage.getItem('token')
       })
     },
     getPast () {
@@ -72,7 +73,8 @@ export default {
       this.updateTicketList({
         pageNo: 1,
         pageSize: 100,
-        outOfDate: 'no'
+        outOfDate: 'no',
+        userId: window.sessionStorage.getItem('token')
       })
     }
   },
