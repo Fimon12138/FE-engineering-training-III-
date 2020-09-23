@@ -33,6 +33,12 @@
       <span class="text">{{ formData.phone }}</span>
       <span class="title">Description</span>
       <span class="text">{{ formData.desc }}</span>
+      <span class="title">ZJPay Balance</span>
+      <div class="balance">
+        <div ref="animationContainer" class="animationContainer"
+          @click="changeBalanceStatus"></div>
+        <span>{{ balance }}</span>
+      </div>
     </div>
 
     <el-button class="edit-button"
@@ -64,6 +70,9 @@
 import FormItem from '../../components/formItem'
 import { client } from '../../plugins/aliOSS'
 
+import visibilityJSON from '../../assets/lottie_json/visibility.json'
+import Lottie from 'lottie-web'
+
 export default {
   data () {
     return {
@@ -74,6 +83,9 @@ export default {
       disableAvatarSubmit: true,
 
       edit: false,
+      balance: '***',
+      showBalance: false,
+      animation: undefined,
 
       formData: {
         name: '',
@@ -113,7 +125,7 @@ export default {
     beforeAvatarUpload (item) {
       const acceptTypes = ['image/jpeg', 'image/jpg', 'image/png']
       const isIMAGE = acceptTypes.includes(item.type)
-      console.log(isIMAGE)
+      // console.log(isIMAGE)
       return isIMAGE
     },
     uploadAvatar (item) {
@@ -139,8 +151,18 @@ export default {
       this.showDialog = false
     },
     submitAvatar () {
-      this.initAvatarUrl = this.newAvatarUrl
-      this.cancelAvatar()
+      this.$http.put('user', {
+        avatar: this.newAvatarUrl,
+        telephone: this.formData.phone
+      }).then(res => {
+        if (res.status === 200) {
+          this.initAvatarUrl = this.newAvatarUrl
+          this.cancelAvatar()
+        }
+      }).catch(err => {
+        alert('Error!')
+        console.log(err)
+      })
     },
 
     cancelEdit () {
@@ -150,13 +172,58 @@ export default {
     },
     submitEdit () {
       this.edit = false
+    },
+    changeBalanceStatus () {
+      if (this.showBalance) {
+        this.showBalance = false
+        this.balance = '***'
+        this.animation.playSegments([0, 24], true)
+      } else {
+        this.showBalance = true
+        this.animation.playSegments([24, 0], true)
+        this.$http.post('/api/v1/user/info', {
+          id: window.sessionStorage.getItem('token')
+        }).then(res => {
+          if (res.status === 200) {
+            this.$http.post('/api/v1/zjpay/info', {
+              id: res.data.payId
+            }).then(res => {
+              if (res.status === 200) {
+                this.balance = res.data.Money
+              }
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+          alert('Error!')
+        })
+      }
     }
   },
   created () {
-    this.initAvatarUrl = 'https://cloudmarkdown.oss-cn-beijing.aliyuncs.com/1600679403631.jpg'
-    this.formData.name = 'Yihang Lu'
-    this.formData.phone = '12345678911'
-    this.formData.desc = 'This is for test!'
+    this.$http.post('/api/v1/user/info', {
+      id: window.sessionStorage.getItem('token')
+    }).then(res => {
+      if (res.status === 200) {
+        this.initAvatarUrl = res.data.avatar
+        this.formData.name = res.data.nickname
+        this.formData.phone = res.data.telephone
+        this.formData.desc = res.data.description
+      }
+    })
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.animation = Lottie.loadAnimation({
+        container: this.$refs.animationContainer,
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        animationData: visibilityJSON
+      })
+      // this.animation.playSegments([0, 25], true)
+      this.animation.goToAndStop(24, true)
+    })
   }
 }
 </script>
@@ -249,5 +316,19 @@ export default {
   position: absolute;
   top: 50px;
   right: 20%;
+}
+
+.balance {
+  display: flex;
+  flex-direction: row;
+
+  .animationContainer {
+    width: 20px;
+  }
+
+  span {
+    margin-left: 10px;
+    padding-top: 3px;
+  }
 }
 </style>

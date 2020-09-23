@@ -2,9 +2,9 @@
   <div class="container">
     <div class="tool">
       <div :class="{ 'tab': true, 'select-item': activePart === 'upcoming' }"
-        @click="activePart = 'upcoming'">Upcoming</div>
+        @click="getUpcoming">Upcoming</div>
       <div :class="{ 'tab': true, 'select-item': activePart === 'past' }"
-        style="margin-left: 5px" @click="activePart = 'past'">Past</div>
+        style="margin-left: 5px" @click="getPast">Past</div>
     </div>
     <div class="main">
       <Ticket
@@ -21,48 +21,61 @@
 
 <script>
 import Ticket from '../../components/Ticket'
-import logo from '../../assets/img/vue-logo.png'
 
 export default {
   data () {
     return {
-      activePart: 'upcoming',
-      ticketList: [
-        {
-          logo,
-          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-          location: 'Wuhan Center',
-          date: '2020-1-1 19:00'
-        },
-        {
-          logo,
-          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-          location: 'Wuhan Center',
-          date: '2020-1-1 19:00'
-        },
-        {
-          logo,
-          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-          location: 'Wuhan Center',
-          date: '2020-1-1 19:00'
-        },
-        {
-          logo,
-          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-          location: 'Wuhan Center',
-          date: '2020-1-1 19:00'
-        },
-        {
-          logo,
-          name: 'Liu Bo\'s Personal Concert - Wuhan Station',
-          location: 'Wuhan Center',
-          date: '2020-1-1 19:00'
-        }
-      ]
+      activePart: '',
+      ticketList: []
     }
   },
   components: {
     Ticket
+  },
+  methods: {
+    updateTicketList (params) {
+      this.ticketList = []
+
+      this.$http.post('/api/v1/order/finished', params).then(res => {
+        if (res.status === 200 && res.data.result) {
+          res.data.result.forEach(element => {
+            const ticket = {
+              logo: element.imageColumn,
+              name: element.name,
+              location: element.location,
+              date: element.startTime
+            }
+            this.ticketList.push(ticket)
+          })
+        } else {
+          console.log(res)
+        }
+      }).catch(err => {
+        console.log(err)
+        alert('Error!')
+      })
+    },
+    getUpcoming () {
+      this.activePart = 'upcoming'
+
+      this.updateTicketList({
+        pageNo: 1,
+        pageSize: 100,
+        outOfDate: 'yes'
+      })
+    },
+    getPast () {
+      this.activePart = 'past'
+
+      this.updateTicketList({
+        pageNo: 1,
+        pageSize: 100,
+        outOfDate: 'no'
+      })
+    }
+  },
+  created () {
+    this.getUpcoming()
   }
 }
 </script>

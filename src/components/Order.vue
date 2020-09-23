@@ -13,7 +13,7 @@
     <el-divider></el-divider>
 
     <div>
-      <el-button type="danger">Refund</el-button>
+      <el-button type="danger" @click="deleteOrder">Delete</el-button>
     </div>
 
     <!-- 右上角状态 -->
@@ -28,6 +28,20 @@ export default {
     order: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    deleteOrder () {
+      this.$http.post('/api/v1/order/delete', {
+        id: this.order.id
+      }).then(res => {
+        if (res.status === 200) {
+          this.$emit('deleteOrder')
+        }
+      }).catch(err => {
+        console.log(err)
+        alert('Error!')
+      })
     }
   }
 }
