@@ -178,7 +178,7 @@ export default {
       telephone: '17607100643'
     }
 
-    this.$http.post('http://175.24.31.76:8888/v1/user', params).then(res => {
+    this.$http.post('/api/v1/user', params).then(res => {
       console.log(res)
     }).catch(err => {
       console.log(err)
